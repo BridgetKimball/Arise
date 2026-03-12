@@ -1,0 +1,3 @@
+For next MTS meeting:
+- Sketch the design of the web app (use figma?)             --Fanizza
+- Put outline in README                                     --Bridget

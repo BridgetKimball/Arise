@@ -1,5 +1,10 @@
 Ideas
 - Specific goal tracker: user customizes the goal (maybe a chore?) and uses a template to track it
+- Daily life tracker (combine multiple things)
+    - Track bad habits
+    - Sleep
+    - Diet
+    - Mental health
 - Tracker Ideas:
     - Daily mood
     - Sleep
@@ -29,3 +34,6 @@ Ideas
     - Morning
     - Afternoon
     - Evening
+
+Brainstorming:
+- Share progress with friends

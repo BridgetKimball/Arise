@@ -1,0 +1,16 @@
+Stage 1
+- Basic functionality (Bridget and Michelle)
+    - Habit tracker itself with one habit
+    - Template
+    - One form for multiple habits
+    - User input -> displaying it -> user tracking habit
+    - Javascript
+- Simple design (Fanizza)
+    - One or two pages
+    - HTML / CSS
+    - Figma
+
+Stage 2
+- Login (Fanizza)
+- Advanced design (multiple pages for each habit)
+- Implementing multiple habits
