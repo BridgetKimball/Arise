@@ -1,65 +1,103 @@
-<table width="100%">
-	<tr>
-		<td><h1>Arise</h1></td>
-		<<td align="right"><img src="arise_logo.png" alt="Arise logo" width="140" />></td>
-	</tr>
-</table>
+<div align="center">
+  <img src="arise_logo.png" alt="Arise logo" width="140" />
+  <h1>✨ Arise</h1>
+  <p><em>Build better habits, one day at a time</em></p>
+</div>
 
-## Project Overview
-Arise is a web app for tracking daily habits, routines, and personal goals.
+---
 
-The project starts with a simple single-habit tracker, then grows into a multi-habit tracker with user accounts and more advanced pages.
+## 📋 Project Overview
 
-## Goals
-- Help users build consistency through daily tracking.
-- Keep data entry simple and quick.
-- Support both positive habits (exercise, reading) and reduction habits (bad habits).
-- Expand into a flexible personal life tracker over time.
+**Arise** is a web app for tracking daily habits, routines, and personal goals. Transform your life through consistent, daily habit tracking.
 
-## Planned Core Features
-- Habit templates users can customize.
-- One form that can submit updates for multiple habits.
-- Daily tracking input and progress display.
-- Reminder support for tasks such as to-do items and homework.
-- Basic list support (shopping and grocery).
-- Routine sections (morning, afternoon, evening).
+The project follows a **growth roadmap**:
+1. Simple single-habit tracker
+2. Multi-habit tracker 
+3. User accounts & advanced pages
 
-## Habit and Tracker Categories (Idea Backlog)
-- Daily mood.
-- Sleep.
-- Weather.
-- Diet (food and water).
-- Mental health.
-- Religious reading (page number and notes).
-- Exercise (steps, minutes, calories).
-- Reading (books per month, review/rating).
-- Movies (movies per month, review/rating).
+---
 
-## Roadmap
-### Stage 1: Foundation
-- Build basic tracker functionality.
-	- Track one habit first.
-	- Create a reusable template.
-	- Support user input, display, and tracking flow.
-	- Explore one form for multiple habits.
-	- Use JavaScript for interaction.
-- Build a simple design.
-	- One to two pages.
-	- HTML and CSS implementation.
-	- Initial Figma design.
+## 🎯 Goals
 
-### Stage 2: Expansion
-- Add login.
-- Upgrade design with multiple pages.
-- Implement tracking for multiple habits.
+- ✅ Help users **build consistency** through daily tracking
+- ⚡ Keep data entry **simple and quick**
+- 🔄 Support both **positive habits** (exercise, reading) and **reduction habits** (breaking bad habits)
+- 🚀 Expand into a **flexible personal life tracker** over time
 
-## Future Ideas
-- Specific goal tracker (custom goal/chore templates).
-- Combined daily life tracker across health and productivity areas.
-- Progress sharing with friends.
+---
 
-## Suggested Next Steps
-- Confirm the exact Stage 1 minimum feature set for first demo.
-- Define the first habit template fields.
-- Create a basic page wireframe and form flow.
-- Decide how progress will be stored (temporary local storage or database-ready structure).
+## ⭐ Planned Core Features
+
+| Feature | Description |
+|---------|-------------|
+| 🎨 **Habit Templates** | Customizable templates users can personalize |
+| 📝 **Multi-Habit Form** | Submit updates for multiple habits at once |
+| 📊 **Daily Tracking** | Input and progress display with visual feedback |
+| 🔔 **Reminders** | Support for tasks, to-do items, and homework |
+| 📋 **Lists** | Shopping and grocery lists | 
+| ⏰ **Routines** | Morning, afternoon, and evening sections |
+
+---
+
+## 🏷️ Habit & Tracker Categories (Idea Backlog)
+
+*Future tracking possibilities across health, productivity, and personal growth:*
+
+- 😊 Daily mood
+- 😴 Sleep tracking
+- 🌤️ Weather
+- 🍽️ Diet (food & water intake)
+- 🧠 Mental health
+- 📖 Religious reading (page numbers & notes)
+- 🏃 Exercise (steps, minutes, calories)
+- 📚 Reading (books per month, reviews)
+- 🎬 Movies (monthly tracking, reviews)
+
+---
+
+## 🛣️ Roadmap
+
+### 📍 Stage 1: Foundation
+**Goal:** Build basic tracker functionality and simple design
+
+#### Backend Features
+- Track a single habit to establish core flow
+- Create reusable habit template structure
+- Implement user input, display, and tracking workflow
+- Explore multi-habit form submission
+- Add JavaScript for interactivity
+
+#### Frontend Design
+- One to two page layout
+- HTML & CSS implementation
+- Initial Figma wireframes
+
+### 📍 Stage 2: Expansion
+**Goal:** Multi-user support and enhanced features
+
+- User authentication & login
+- Upgrade UI with multiple pages
+- Support tracking for multiple habits simultaneously
+
+---
+
+## 💡 Future Ideas
+
+- 🎯 **Custom Goal Tracker** – Custom goal/chore templates
+- 🏥 **Life Dashboard** – Combined tracker across health and productivity
+- 👥 **Social Features** – Progress sharing with friends
+
+---
+
+## 🚀 Suggested Next Steps
+
+- [ ] Confirm the exact Stage 1 minimum feature set for first demo
+- [ ] Define the first habit template fields and structure
+- [ ] Create basic page wireframes and form flow diagrams
+- [ ] Decide data storage approach (local storage vs. database-ready structure)
+
+---
+
+<div align="center">
+  <p><strong>Let's build better habits together! 🌱</strong></p>
+</div>
