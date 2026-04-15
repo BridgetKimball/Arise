@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="arise_logo.png" alt="Arise logo" width="140" />
+  <img src="pictures/arise_logo.png" alt="Arise logo" width="140" />
   <h1>✨ Arise</h1>
   <p><em>Build better habits, one day at a time</em></p>
 </div>
