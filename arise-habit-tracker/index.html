@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arise - Habit Tracker</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        <header class="header">
+            <div>
+                <h1>🌱 Arise</h1>
+                <p class="subtitle">Habit Tracker</p>
+            </div>
+            <div class="header-right">
+                <p id="current-date" class="date-text"></p>
+                <p id="completion-status" class="status-text">0/0 done</p>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <div id="progress-container" class="progress-section" style="display: none;">
+                <div class="progress-labels">
+                    <span>Today's Progress</span>
+                    <span id="progress-percent">0%</span>
+                </div>
+                <div class="progress-track">
+                    <div id="progress-bar" class="progress-fill"></div>
+                </div>
+            </div>
+
+            <div class="card add-habit-card">
+                <h2>Add a new habit</h2>
+                <form id="habit-form" class="habit-form">
+                    <input type="text" id="habit-input" placeholder="e.g., Drink 8 glasses of water" required>
+                    <button type="submit" id="add-btn">+ Add</button>
+                </form>
+            </div>
+
+            <div class="card list-card">
+                <h2>My Habits</h2>
+                <div id="empty-state" class="empty-state">
+                    <p class="emoji">🌱</p>
+                    <p>No habits yet. Add one above to get started!</p>
+                </div>
+                <ul id="habit-list" class="habit-list"></ul>
+            </div>
+        </main>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
