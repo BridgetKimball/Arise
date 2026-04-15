@@ -1,7 +1,7 @@
 body {
     margin: 0;
     padding: 0;
-    background-color: #f5f3ff;
+    background-color: #FEFAE6;
     font-family: sans-serif;
 }
 
@@ -10,8 +10,8 @@ body {
 }
 
 .header {
-    background-color: #7c3aed;
-    color: white;
+    background-color: #FAF4BD;
+    color: #E87C3A;
     padding: 20px 24px;
     display: flex;
     justify-content: space-between;
@@ -23,6 +23,12 @@ body {
 .header-right { text-align: right; }
 .date-text { margin: 0; font-size: 13px; opacity: 0.8; }
 .status-text { margin: 4px 0 0; font-size: 18px; font-weight: bold; }
+
+.logo {
+    width: 40px;
+    height: 40px;
+    margin-right: 12px;
+}
 
 .main-content {
     max-width: 600px;
@@ -36,12 +42,12 @@ body {
     justify-content: space-between;
     margin-bottom: 6px;
     font-size: 14px;
-    color: #6b7280;
+    color: #BE7961;
 }
 
 .progress-track {
     height: 10px;
-    background-color: #ede9fe;
+    background-color: #FAF4BD;
     border-radius: 9999px;
     overflow: hidden;
 }
@@ -49,7 +55,7 @@ body {
 .progress-fill {
     height: 100%;
     width: 0%;
-    background-color: #7c3aed;
+    background-color: #E87C3A;
     border-radius: 9999px;
     transition: width 0.3s ease;
 }
@@ -59,24 +65,25 @@ body {
     border-radius: 12px;
     padding: 20px;
     margin-bottom: 20px;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    box-shadow: 0 1px 4px #BE7961;
 }
 
-.card h2 { margin: 0 0 12px; font-size: 16px; color: #374151; }
+.card h2 { margin: 0 0 12px; font-size: 16px; color: #BE7961; }
 
 .habit-form { display: flex; gap: 10px; }
 input {
     flex: 1;
     padding: 10px 14px;
     border-radius: 8px;
-    border: 1px solid #d1d5db;
+    border: 1px solid #F3C248;
+    color: #BE7961;
     font-size: 14px;
     outline: none;
 }
 
 button#add-btn {
     padding: 10px 18px;
-    background-color: #7c3aed;
+    background-color: #E87C3A;
     color: white;
     border: none;
     border-radius: 8px;
@@ -88,10 +95,8 @@ button#add-btn {
 .empty-state {
     text-align: center;
     padding: 32px 0;
-    color: #9ca3af;
+    color: #BE7961;
 }
-
-.emoji { font-size: 32px; margin-bottom: 8px; }
 
 .habit-list {
     list-style: none;
@@ -108,13 +113,13 @@ button#add-btn {
     gap: 12px;
     padding: 14px;
     border-radius: 10px;
-    border: 2px solid #e5e7eb;
+    border: 2px solid #F3C248;
     background-color: #fafafa;
     transition: all 0.2s ease;
 }
 
 .habit-item.done {
-    border-color: #7c3aed;
+    border-color: #E87C3A;
     background-color: #f5f3ff;
 }
 
@@ -122,7 +127,7 @@ button#add-btn {
     width: 24px;
     height: 24px;
     border-radius: 50%;
-    border: 2px solid #d1d5db;
+    border: 2px solid #F3C248;
     background-color: white;
     cursor: pointer;
     flex-shrink: 0;
@@ -133,21 +138,39 @@ button#add-btn {
 }
 
 .habit-item.done .check-btn {
-    background-color: #7c3aed;
-    border-color: #7c3aed;
+    background-color: #E87C3A;
+    border-color: #E87C3A;
 }
 
-.habit-name { flex: 1; font-size: 15px; color: #374151; }
+.habit-details {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.habit-name { font-size: 15px; color: #BE7961; }
+
+.habit-meta {
+    font-size: 12px;
+    color: #BE7961;
+}
+
 .habit-item.done .habit-name {
-    color: #7c3aed;
+    color: #E87C3A;
     text-decoration: line-through;
     opacity: 0.7;
+}
+
+.habit-item.done .habit-meta {
+    color: #E87C3A;
+    opacity: 0.8;
 }
 
 .badge {
     font-size: 12px;
     background-color: #ede9fe;
-    color: #7c3aed;
+    color: #E87C3A;
     padding: 2px 8px;
     border-radius: 9999px;
     font-weight: 600;

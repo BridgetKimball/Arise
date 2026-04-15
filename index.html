@@ -4,13 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Arise - Habit Tracker</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="src/style.css">
 </head>
 <body>
     <div class="app-container">
         <header class="header">
             <div>
-                <h1>🌱 Arise</h1>
+                <img src="pictures/arise_logo.png" alt="Arise Logo" class="logo">
+                <h1>Arise</h1>
                 <p class="subtitle">Habit Tracker</p>
             </div>
             <div class="header-right">
@@ -41,13 +42,13 @@
             <div class="card list-card">
                 <h2>My Habits</h2>
                 <div id="empty-state" class="empty-state">
-                    <p class="emoji">🌱</p>
+                    <img src="pictures/arise_logo.png" alt="Arise Logo" class="logo">
                     <p>No habits yet. Add one above to get started!</p>
                 </div>
                 <ul id="habit-list" class="habit-list"></ul>
             </div>
         </main>
     </div>
-    <script src="script.js"></script>
+    <script src="src/script.js"></script>
 </body>
 </html>
