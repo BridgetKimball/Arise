@@ -1,3 +1,6 @@
-For next MTS meeting:
-- Sketch the design of the web app (use figma?)             --Fanizza
-- Put outline in README                                     --Bridget
+Next Steps:
+- Implement cross-platform aspect (allow mobile access)
+- Add more features: to-do list?
+- Login
+
+Look at ideas.txt for feature ideas
