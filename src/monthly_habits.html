@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arise - Monthly Habits</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        <header class="header">
+            <button id="nav-toggle" class="top-logo-button" type="button" aria-label="Open navigation menu" aria-controls="side-nav" aria-expanded="false">
+                <img class="top-logo-icon" src="../pictures/arise_logo.png" alt="logo navigation icon">
+            </button>
+            <div id="nav-overlay" class="side-nav-overlay" aria-hidden="true"></div>
+            <nav id="side-nav" class="side-nav-panel" aria-label="Site navigation">
+                <h2 class="side-nav-title">Navigate</h2>
+                <ul class="side-nav-list">
+                    <li><a class="side-nav-link" href="../index.html">Home</a></li>
+                    <li><a class="side-nav-link" href="monthly_habits.html">Monthly Habits</a></li>
+                    <li><a class="side-nav-link" href="edit_habits.html">Edit Habits</a></li>
+                </ul>
+            </nav>
+
+            <div class="header-center">
+                <h1>Arise</h1>
+                <p class="subtitle">Habit Tracker</p>
+            </div>
+            <div class="header-right">
+                <p id="current-date" class="date-text"></p>
+                <p class="status-text">Monthly Habits</p>
+            </div>
+        </header>
+        <main class="main-content home-main-content">
+            <div class="card list-card">
+                <h2>Monthly Habits</h2>
+                <div class="month-filter">
+                    <label for="month-picker" class="month-label">Select month</label>
+                    <input type="month" id="month-picker" class="month-picker">
+                </div>
+                <div id="monthly-check-table" class="monthly-week-tables"></div>
+            </div>
+        </main>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>

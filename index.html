@@ -9,8 +9,20 @@
 <body>
     <div class="app-container">
         <header class="header">
-            <div>
-                <img src="pictures/arise_logo.png" alt="Arise Logo" class="logo">
+            <button id="nav-toggle" class="top-logo-button" type="button" aria-label="Open navigation menu" aria-controls="side-nav" aria-expanded="false">
+                <img class="top-logo-icon" src="pictures/arise_logo.png" alt="logo navigation icon">
+            </button>
+            <div id="nav-overlay" class="side-nav-overlay" aria-hidden="true"></div>
+            <nav id="side-nav" class="side-nav-panel" aria-label="Site navigation">
+                <h2 class="side-nav-title">Navigate</h2>
+                <ul class="side-nav-list">
+                    <li><a class="side-nav-link" href="index.html">Home</a></li>
+                    <li><a class="side-nav-link" href="src/monthly_habits.html">Monthly Habits</a></li>
+                    <li><a class="side-nav-link" href="src/edit_habits.html">Edit Habits</a></li>
+                </ul>
+            </nav>
+
+            <div class="header-center">
                 <h1>Arise</h1>
                 <p class="subtitle">Habit Tracker</p>
             </div>
@@ -20,7 +32,7 @@
             </div>
         </header>
 
-        <main class="main-content">
+        <main class="main-content home-main-content">
             <div id="progress-container" class="progress-section" style="display: none;">
                 <div class="progress-labels">
                     <span>Today's Progress</span>
@@ -34,9 +46,32 @@
             <div class="card add-habit-card">
                 <h2>Add a new habit</h2>
                 <form id="habit-form" class="habit-form">
-                    <input type="text" id="habit-input" placeholder="e.g., Drink 8 glasses of water" required>
+                    <div>
+                        <label for="target-date-input" class="target-date-label">Habit name</label>
+                        <input type="text" id="habit-input" placeholder="e.g., Drink 8 glasses of water" required>
+                    </div>
+                    <div class="frequency-field">
+                        <label for="frequency" class="target-date-label">Frequency</label>
+                        <select id="frequency" required>
+                            <option value="daily" selected>Daily</option>
+                            <option value="weekly">Weekly</option>
+                            <option value="monthly">Monthly</option>
+                        </select>
+                    </div>
+                    <div class="target-date-field">
+                        <label for="target-date-input" class="target-date-label">End/Target date (optional)</label>
+                        <input type="date" id="target-date-input" aria-label="End or target date (optional)">
+                    </div>
                     <button type="submit" id="add-btn">+ Add</button>
                 </form>
+            </div>
+
+            <div class="card weekly-table-card">
+                <div class="weekly-table-head">
+                    <h2>Weekly Checkoff</h2>
+                    <p id="week-range-label" class="week-range-label"></p>
+                </div>
+                <div id="weekly-check-table" class="weekly-check-table"></div>
             </div>
 
             <div class="card list-card">
