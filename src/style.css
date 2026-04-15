@@ -192,26 +192,34 @@ body {
 .card h2 { margin: 0 0 12px; font-size: 16px; color: #BE7961; }
 
 .habit-form {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(220px, 1fr)) auto;
+  display: flex;
   gap: 12px;
   align-items: flex-end;
+  flex-wrap: nowrap;
+  width: 100%;
 }
 
 .habit-form > div {
+  flex: 1 1 auto;
   min-width: 0;
 }
 
 #habit-input {
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+.frequency-field,
+.target-date-field {
+  flex: 1 1 auto;
   min-width: 0;
 }
 
+#frequency,
 #target-date-input {
   width: 100%;
-}
-
-.target-date-field {
-  min-width: 0;
+  box-sizing: border-box;
 }
 
 .target-date-label {
@@ -243,7 +251,7 @@ input {
   }
 
 button#add-btn {
-    padding: 10px 18px;
+    padding: 10px 20px;
     background-color: #E87C3A;
     color: white;
     border: none;
@@ -251,32 +259,33 @@ button#add-btn {
     font-size: 14px;
     font-weight: 600;
     cursor: pointer;
-    margin-left: 0;
-    justify-self: end;
-    grid-column: 4;
-    grid-row: 1;
+    flex: 0 0 auto;
+    white-space: nowrap;
+    height: fit-content;
 }
 
-@media (max-width: 1100px) {
+@media (max-width: 1024px) {
   .habit-form {
-    grid-template-columns: repeat(2, minmax(220px, 1fr));
-  }
-
-  button#add-btn {
-    grid-column: 2;
-    grid-row: auto;
+    gap: 10px;
   }
 }
 
-@media (max-width: 760px) {
+@media (max-width: 768px) {
   .habit-form {
-    grid-template-columns: 1fr;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .habit-form > div,
+  .frequency-field,
+  .target-date-field {
+    flex: 1 1 100%;
+    min-width: 0;
   }
 
   button#add-btn {
-    grid-column: auto;
-    grid-row: auto;
-    justify-self: start;
+    flex: 1 1 100%;
+    width: 100%;
   }
 }
 

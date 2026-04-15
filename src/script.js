@@ -514,12 +514,30 @@ function renderMonthlyHabits() {
     }
 
     monthlyCheckTable.innerHTML = weekDateGroups.map((weekDates, weekIndex) => {
+        const weekHabits = activeHabits.filter(({ habit }) => {
+            return weekDates.some((date) => isHabitActiveOnDate(habit, date) && isDateScheduledByFrequency(habit, date));
+        });
+
         const dayHeaders = weekDates.map((date) => {
             const weekdayLetter = date.toLocaleDateString('en-US', { weekday: 'short' }).charAt(0);
             return `<th>${weekdayLetter}<br><span class="day-num">${date.getDate()}</span></th>`;
         }).join('');
 
-        const bodyRows = activeHabits.map(({ habit, index }) => {
+        if (weekHabits.length === 0) {
+            const firstDay = weekDates[0]?.getDate() || 0;
+            const lastDay = weekDates[weekDates.length - 1]?.getDate() || 0;
+            return `
+                <section class="month-week-block">
+                    <h3 class="month-week-title">Week ${weekIndex + 1} (${firstDay}-${lastDay})</h3>
+                    <div class="empty-state week-empty">
+                        <img src="${getMonthlyLogoPath()}" alt="Arise Logo" class="logo">
+                        <p>No habits yet. Add one above to get started!</p>
+                    </div>
+                </section>
+            `;
+        }
+
+        const bodyRows = weekHabits.map(({ habit, index }) => {
             const cells = weekDates.map((date) => {
                 const dateKey = getDateKey(date);
                 const isActiveOnDate = isHabitActiveOnDate(habit, date);
