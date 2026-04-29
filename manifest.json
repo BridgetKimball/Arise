@@ -1,0 +1,16 @@
+{
+  "name": "Arise - Habit Tracker",
+  "short_name": "Arise",
+  "description": "Track your daily, weekly, and monthly habits",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#FEFAE6",
+  "theme_color": "#E87C3A",
+  "icons": [
+    {
+      "src": "pictures/arise_logo.png",
+      "sizes": "any",
+      "type": "image/png"
+    }
+  ]
+}

@@ -559,3 +559,50 @@ button#add-btn {
   border: 2px dashed #e8d8b9;
   opacity: 0.7;
 }
+
+/* Mobile touch and layout improvements */
+@media (max-width: 600px) {
+  /* Prevent iOS Safari from zooming on input focus (requires 16px minimum) */
+  input, select {
+    font-size: 16px;
+  }
+
+  /* Larger touch targets for habit check buttons */
+  .check-btn {
+    width: 36px;
+    height: 36px;
+    flex-shrink: 0;
+  }
+
+  /* Larger touch targets for weekly/monthly check cells */
+  .week-check-cell {
+    width: 36px;
+    height: 36px;
+  }
+
+  /* More tappable delete and edit buttons */
+  .delete-btn {
+    padding: 8px;
+    font-size: 18px;
+  }
+
+  .edit-btn {
+    padding: 10px 12px;
+  }
+
+  /* Stack edit fields into a single column on narrow screens */
+  .habit-edit-dates {
+    grid-template-columns: 1fr;
+  }
+
+  /* Narrower habit name column so monthly tables fit on phone screens */
+  .month-week-grid .habit-col {
+    min-width: 80px;
+    width: 100px;
+  }
+
+  /* Allow month picker to shrink on small screens */
+  .month-picker {
+    flex: 1 1 140px;
+  }
+}

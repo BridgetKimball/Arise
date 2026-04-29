@@ -1,0 +1,22 @@
+{
+  "expo": {
+    "name": "Arise",
+    "slug": "arise-habit-tracker",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "backgroundColor": "#FEFAE6"
+    },
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "com.arise.habittracker"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#E87C3A"
+      },
+      "package": "com.arise.habittracker"
+    }
+  }
+}

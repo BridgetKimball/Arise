@@ -17,6 +17,81 @@ The project follows a **growth roadmap**:
 
 ---
 
+## 🌐 Deployment
+
+---
+
+### 1. Open in a Web Browser
+
+Click the link below to open Arise on any device with a web browser:
+
+**https://tinyurl.com/Arise-Habit-Tracker**
+
+---
+
+### 2. Run as a Mobile App (iPhone & Android) — Free!
+
+Arise has a full native mobile app powered by **Expo Go** — a free app available in both the App Store and Google Play. No developer account or Apple/Google developer fees needed.
+
+> **Requirements:** Node.js installed on your computer, and your phone and computer on the **same Wi-Fi network**.
+
+---
+
+#### Step 1 — Install Expo Go on your phone
+
+| Platform | Where to download |
+|----------|-------------------|
+| **iPhone** | Search **"Expo Go"** in the **App Store** |
+| **Android** | Search **"Expo Go"** in the **Google Play Store** |
+
+---
+
+#### Step 2 — Start the development server on your computer
+
+1. Download this project to your computer (if you haven't already)
+2. Open a **Terminal** window
+3. Navigate to the `mobile` folder — replace the path below with your actual path:
+
+```
+cd path/to/Arise/mobile
+```
+
+> **Tip (Mac):** Right-click the `mobile` folder in Finder, hold Option, and choose **"Copy as Pathname"**. Paste it after `cd `.
+
+4. Install dependencies the **first time only**:
+
+```
+npm install
+```
+
+5. Start the server:
+
+```
+npx expo start
+```
+
+A QR code will appear in the terminal. Leave this window open while you use the app.
+
+---
+
+#### Step 3 — Open the app on your phone
+
+**iPhone:**
+1. Open the built-in **Camera** app
+2. Point it at the QR code on your computer screen
+3. Tap the banner that appears at the top — Arise will open in Expo Go
+
+**Android:**
+1. Open the **Expo Go** app
+2. Tap **"Scan QR code"**
+3. Point it at the QR code on your computer screen — Arise will open
+
+---
+
+> **Troubleshooting:** If the app doesn't load, make sure your phone and computer are on the same Wi-Fi network. If you see a module or cache error, stop the server (`Ctrl+C`) and restart it with `npx expo start --clear`.
+
+---
+
 ## 🎯 Goals
 
 - ✅ Help users **build consistency** through daily tracking
