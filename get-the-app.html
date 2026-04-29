@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#E87C3A">
+  <title>Get the Arise App</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: sans-serif;
+      background-color: #FEFAE6;
+      color: #BE7961;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    header {
+      width: 100%;
+      background-color: #FAF4BD;
+      padding: 24px 20px;
+      text-align: center;
+    }
+
+    header img {
+      width: 56px;
+      height: 56px;
+      margin-bottom: 10px;
+    }
+
+    header h1 {
+      font-size: 28px;
+      font-weight: bold;
+      color: #E87C3A;
+    }
+
+    header p {
+      font-size: 14px;
+      color: #BE7961;
+      margin-top: 4px;
+      opacity: 0.85;
+    }
+
+    main {
+      width: 100%;
+      max-width: 480px;
+      padding: 32px 20px 48px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .intro {
+      text-align: center;
+      font-size: 15px;
+      line-height: 1.6;
+      color: #BE7961;
+    }
+
+    .step {
+      background: #fff;
+      border-radius: 14px;
+      padding: 22px 20px;
+      box-shadow: 0 1px 6px rgba(190, 121, 97, 0.2);
+    }
+
+    .step-number {
+      display: inline-block;
+      background-color: #E87C3A;
+      color: #fff;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      border-radius: 9999px;
+      padding: 3px 10px;
+      margin-bottom: 10px;
+    }
+
+    .step h2 {
+      font-size: 17px;
+      font-weight: 700;
+      color: #BE7961;
+      margin-bottom: 8px;
+    }
+
+    .step p {
+      font-size: 14px;
+      line-height: 1.6;
+      color: #BE7961;
+      opacity: 0.85;
+      margin-bottom: 16px;
+    }
+
+    .store-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .store-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 14px 20px;
+      border-radius: 10px;
+      font-size: 15px;
+      font-weight: 700;
+      text-decoration: none;
+      transition: opacity 0.15s ease;
+    }
+
+    .store-btn:hover { opacity: 0.88; }
+
+    .ios-btn {
+      background-color: #33659C;
+      color: #FAF4BD;
+    }
+
+    .android-btn {
+      background-color: #E87C3A;
+      color: #fff;
+    }
+
+    .store-btn svg {
+      flex-shrink: 0;
+    }
+
+    .step-note {
+      background-color: #FFF7E5;
+      border: 1px solid #F3C248;
+      border-radius: 8px;
+      padding: 12px 14px;
+      font-size: 13px;
+      line-height: 1.55;
+      color: #BE7961;
+    }
+
+    .footer-note {
+      text-align: center;
+      font-size: 13px;
+      opacity: 0.7;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <img src="pictures/arise_logo.png" alt="Arise logo">
+    <h1>Arise</h1>
+    <p>Build better habits, one day at a time</p>
+  </header>
+
+  <main>
+    <p class="intro">
+      Arise runs on your phone through a free app called <strong>Expo Go</strong>.
+      Follow the two steps below to get set up.
+    </p>
+
+    <!-- Step 1 -->
+    <div class="step">
+      <span class="step-number">STEP 1</span>
+      <h2>Download Expo Go</h2>
+      <p>Choose the button for your phone's operating system.</p>
+      <div class="store-buttons">
+        <a class="store-btn ios-btn" href="https://apps.apple.com/app/expo-go/id982107779" target="_blank" rel="noopener">
+          <!-- Apple logo -->
+          <svg width="20" height="20" viewBox="0 0 814 1000" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+            <path d="M788.1 340.9c-5.8 4.5-108.2 62.2-108.2 190.5 0 148.4 130.3 200.9 134.2 202.2-.6 3.2-20.7 71.9-68.7 141.9-42.8 61.6-87.5 123.1-155.5 123.1s-85.5-39.5-164-39.5c-76 0-103.7 40.8-165.9 40.8s-105-37.5-155.5-127.4C46 790.3 0 663.2 0 541.8c0-207.4 135.4-317 269-317 71-1.1 138.4 42 185.3 42 44.8 0 128.2-50.1 218.7-50.1 35 0 127.5 4.1 197.2 101.5zm-257.7-166.4c31.4-37.9 54.3-91 54.3-144.1 0-7.8-.6-15.7-2-22.9-51.4 2-112 34.5-148.5 78.1-28.1 32.7-55.1 86.5-55.1 140.3 0 8.5 1.3 17 1.9 19.7 3.3.5 8.5 1.3 13.7 1.3 45.9 0 102.9-30.5 135.7-72.4z"/>
+          </svg>
+          iPhone — App Store
+        </a>
+        <a class="store-btn android-btn" href="https://play.google.com/store/apps/details?id=host.exp.exponent" target="_blank" rel="noopener">
+          <!-- Play logo -->
+          <svg width="20" height="20" viewBox="0 0 512 512" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+            <path d="M48 432L288 256 48 80v352zm32-296l179.5 120L80 376V136zm208 120L464 128 256 0 80 112l208 144zm0 0L80 400l176 112 208-128-208-128z"/>
+          </svg>
+          Android — Google Play
+        </a>
+      </div>
+    </div>
+
+    <!-- Step 2 -->
+    <div class="step">
+      <span class="step-number">STEP 2</span>
+      <h2>Scan the QR code from the server</h2>
+      <p>
+        Once Expo Go is installed, ask the person running the server to show you the QR code in their terminal window. Then:
+      </p>
+      <div class="step-note">
+        <strong>iPhone:</strong> Open your Camera app, point it at the QR code, and tap the banner that appears at the top of your screen.<br><br>
+        <strong>Android:</strong> Open Expo Go, tap <em>"Scan QR code"</em>, and point it at the QR code.
+      </div>
+    </div>
+
+    <!-- Note -->
+    <p class="footer-note">
+      Your phone and the server computer must be on the same Wi-Fi network.
+    </p>
+  </main>
+</body>
+</html>
