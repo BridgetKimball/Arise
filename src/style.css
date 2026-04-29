@@ -546,6 +546,11 @@ button#add-btn {
   background-color: #f5f0e3;
 }
 
+.month-week-grid th.out-of-month {
+  color: #ccc5b5;
+  background-color: #f8f4ec;
+}
+
 .month-week-grid th,
 .month-week-grid td {
   min-width: 52px;

@@ -103,12 +103,11 @@ function getDateKey(dateObject) {
 
 function getCurrentWeekDates() {
     const today = new Date();
-    const mondayOffset = (today.getDay() + 6) % 7;
-    const monday = new Date(today.getFullYear(), today.getMonth(), today.getDate() - mondayOffset);
+    const sunday = new Date(today.getFullYear(), today.getMonth(), today.getDate() - today.getDay());
 
     return Array.from({ length: 7 }, (_, index) => {
-        const date = new Date(monday);
-        date.setDate(monday.getDate() + index);
+        const date = new Date(sunday);
+        date.setDate(sunday.getDate() + index);
         return date;
     });
 }
@@ -415,6 +414,29 @@ function getDatesInMonth(selectedMonth) {
     });
 }
 
+function getCalendarWeeks(selectedMonth) {
+    const [yearText, monthText] = selectedMonth.split('-');
+    const year = Number(yearText);
+    const monthIndex = Number(monthText) - 1;
+
+    const firstOfMonth = new Date(year, monthIndex, 1);
+    const lastOfMonth = new Date(year, monthIndex + 1, 0);
+
+    const cursor = new Date(firstOfMonth);
+    cursor.setDate(firstOfMonth.getDate() - firstOfMonth.getDay()); // rewind to Sunday
+
+    const weeks = [];
+    while (cursor <= lastOfMonth) {
+        const week = [];
+        for (let i = 0; i < 7; i++) {
+            week.push(new Date(cursor));
+            cursor.setDate(cursor.getDate() + 1);
+        }
+        weeks.push(week);
+    }
+    return weeks;
+}
+
 function normalizeFrequency(frequencyText) {
     return canonicalizeFrequency(frequencyText);
 }
@@ -485,21 +507,19 @@ function renderMonthlyHabits() {
         ? monthPicker.value
         : getCurrentMonthString();
 
-    const monthDates = getDatesInMonth(selectedMonth);
-    const weekDateGroups = [
-        monthDates.filter((date) => date.getDate() >= 1 && date.getDate() <= 7),
-        monthDates.filter((date) => date.getDate() >= 8 && date.getDate() <= 14),
-        monthDates.filter((date) => date.getDate() >= 15 && date.getDate() <= 21),
-        monthDates.filter((date) => date.getDate() >= 22)
-    ];
+    const [selectedYear, selectedMonthNum] = selectedMonth.split('-').map(Number);
+    const selectedMonthIndex = selectedMonthNum - 1;
+    const weekDateGroups = getCalendarWeeks(selectedMonth);
     const activeHabits = habits
         .map((habit, index) => ({ habit, index }))
         .filter(({ habit }) => isHabitActiveInMonth(habit, selectedMonth));
 
     if (activeHabits.length === 0) {
         monthlyCheckTable.innerHTML = weekDateGroups.map((weekDates, weekIndex) => {
-            const firstDay = weekDates[0]?.getDate() || 0;
-            const lastDay = weekDates[weekDates.length - 1]?.getDate() || 0;
+            const inMonthDates = weekDates.filter((d) => d.getMonth() === selectedMonthIndex);
+            if (inMonthDates.length === 0) return '';
+            const firstDay = inMonthDates[0].getDate();
+            const lastDay = inMonthDates[inMonthDates.length - 1].getDate();
             return `
                 <section class="month-week-block">
                     <h3 class="month-week-title">Week ${weekIndex + 1} (${firstDay}-${lastDay})</h3>
@@ -514,18 +534,24 @@ function renderMonthlyHabits() {
     }
 
     monthlyCheckTable.innerHTML = weekDateGroups.map((weekDates, weekIndex) => {
+        const inMonthDates = weekDates.filter((d) => d.getMonth() === selectedMonthIndex);
+        if (inMonthDates.length === 0) return '';
+
         const weekHabits = activeHabits.filter(({ habit }) => {
-            return weekDates.some((date) => isHabitActiveOnDate(habit, date) && isDateScheduledByFrequency(habit, date));
+            return inMonthDates.some((date) => isHabitActiveOnDate(habit, date) && isDateScheduledByFrequency(habit, date));
         });
 
         const dayHeaders = weekDates.map((date) => {
+            const isInMonth = date.getMonth() === selectedMonthIndex;
             const weekdayLetter = date.toLocaleDateString('en-US', { weekday: 'short' }).charAt(0);
-            return `<th>${weekdayLetter}<br><span class="day-num">${date.getDate()}</span></th>`;
+            const thClass = isInMonth ? '' : ' class="out-of-month"';
+            return `<th${thClass}>${weekdayLetter}<br><span class="day-num">${date.getDate()}</span></th>`;
         }).join('');
 
+        const firstDay = inMonthDates[0].getDate();
+        const lastDay = inMonthDates[inMonthDates.length - 1].getDate();
+
         if (weekHabits.length === 0) {
-            const firstDay = weekDates[0]?.getDate() || 0;
-            const lastDay = weekDates[weekDates.length - 1]?.getDate() || 0;
             return `
                 <section class="month-week-block">
                     <h3 class="month-week-title">Week ${weekIndex + 1} (${firstDay}-${lastDay})</h3>
@@ -539,6 +565,9 @@ function renderMonthlyHabits() {
 
         const bodyRows = weekHabits.map(({ habit, index }) => {
             const cells = weekDates.map((date) => {
+                if (date.getMonth() !== selectedMonthIndex) {
+                    return '<td class="unscheduled-td"></td>';
+                }
                 const dateKey = getDateKey(date);
                 const isActiveOnDate = isHabitActiveOnDate(habit, date);
                 const isScheduled = isDateScheduledByFrequency(habit, date);
@@ -568,9 +597,6 @@ function renderMonthlyHabits() {
                 </tr>
             `;
         }).join('');
-
-        const firstDay = weekDates[0]?.getDate() || 0;
-        const lastDay = weekDates[weekDates.length - 1]?.getDate() || 0;
 
         return `
             <section class="month-week-block">

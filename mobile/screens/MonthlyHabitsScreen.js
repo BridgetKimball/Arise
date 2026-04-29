@@ -6,7 +6,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import { loadHabits, saveHabits } from '../utils/storage';
 import {
   normalizeHabits, getTodayDateString, getCurrentMonthString,
-  getDatesInMonth, getDateKey, isHabitActiveInMonth,
+  getCalendarWeeks, getDateKey, isHabitActiveInMonth,
   isHabitActiveOnDate, isDateScheduledByFrequency,
 } from '../utils/habitUtils';
 
@@ -53,13 +53,8 @@ export default function MonthlyHabitsScreen() {
     year: 'numeric',
   });
 
-  const monthDates = getDatesInMonth(selectedMonth);
-  const weekGroups = [
-    monthDates.filter((d) => d.getDate() >= 1 && d.getDate() <= 7),
-    monthDates.filter((d) => d.getDate() >= 8 && d.getDate() <= 14),
-    monthDates.filter((d) => d.getDate() >= 15 && d.getDate() <= 21),
-    monthDates.filter((d) => d.getDate() >= 22),
-  ];
+  const monthIndex = month - 1;
+  const weekGroups = getCalendarWeeks(selectedMonth);
   const activeHabits = habits
     .map((habit, index) => ({ habit, index }))
     .filter(({ habit }) => isHabitActiveInMonth(habit, selectedMonth));
@@ -78,13 +73,16 @@ export default function MonthlyHabitsScreen() {
       </View>
 
       {weekGroups.map((weekDates, weekIndex) => {
+        const inMonthDates = weekDates.filter((d) => d.getMonth() === monthIndex);
+        if (inMonthDates.length === 0) return null;
+
         const weekHabits = activeHabits.filter(({ habit }) =>
-          weekDates.some(
+          inMonthDates.some(
             (d) => isHabitActiveOnDate(habit, d) && isDateScheduledByFrequency(habit, d)
           )
         );
-        const first = weekDates[0]?.getDate() ?? 0;
-        const last = weekDates[weekDates.length - 1]?.getDate() ?? 0;
+        const first = inMonthDates[0].getDate();
+        const last = inMonthDates[inMonthDates.length - 1].getDate();
 
         return (
           <View key={weekIndex} style={styles.weekBlock}>
@@ -101,14 +99,19 @@ export default function MonthlyHabitsScreen() {
                     <View style={styles.habitNameCol}>
                       <Text style={styles.tableHead}>Habit</Text>
                     </View>
-                    {weekDates.map((d, i) => (
-                      <View key={i} style={styles.dayCol}>
-                        <Text style={styles.tableHead}>
-                          {d.toLocaleDateString('en-US', { weekday: 'short' }).charAt(0)}
-                        </Text>
-                        <Text style={styles.tableHead}>{d.getDate()}</Text>
-                      </View>
-                    ))}
+                    {weekDates.map((d, i) => {
+                      const isInMonth = d.getMonth() === monthIndex;
+                      return (
+                        <View key={i} style={styles.dayCol}>
+                          <Text style={[styles.tableHead, !isInMonth && styles.tableHeadMuted]}>
+                            {d.toLocaleDateString('en-US', { weekday: 'short' }).charAt(0)}
+                          </Text>
+                          <Text style={[styles.tableHead, !isInMonth && styles.tableHeadMuted]}>
+                            {d.getDate()}
+                          </Text>
+                        </View>
+                      );
+                    })}
                   </View>
                   {/* Habit rows */}
                   {weekHabits.map(({ habit, index }) => (
@@ -119,6 +122,14 @@ export default function MonthlyHabitsScreen() {
                         </Text>
                       </View>
                       {weekDates.map((d, dIdx) => {
+                        const isInMonth = d.getMonth() === monthIndex;
+                        if (!isInMonth) {
+                          return (
+                            <View key={dIdx} style={styles.dayCol}>
+                              <View style={styles.checkCellInactive} />
+                            </View>
+                          );
+                        }
                         const dk = getDateKey(d);
                         const eligible =
                           isHabitActiveOnDate(habit, d) && isDateScheduledByFrequency(habit, d);
@@ -182,6 +193,7 @@ const styles = StyleSheet.create({
   habitNameCol: { width: 110, paddingVertical: 8, paddingRight: 8 },
   habitNameText: { fontSize: 12, color: C.secondary },
   tableHead: { fontSize: 11, color: '#8a5b47', fontWeight: '600', textAlign: 'center' },
+  tableHeadMuted: { color: '#ccc5b5' },
   dayCol: { width: 44, height: 44, alignItems: 'center', justifyContent: 'center' },
   checkCell: {
     width: 30,

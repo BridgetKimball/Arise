@@ -47,11 +47,10 @@ export function getDateKey(dateObject) {
 
 export function getCurrentWeekDates() {
   const today = new Date();
-  const mondayOffset = (today.getDay() + 6) % 7;
-  const monday = new Date(today.getFullYear(), today.getMonth(), today.getDate() - mondayOffset);
+  const sunday = new Date(today.getFullYear(), today.getMonth(), today.getDate() - today.getDay());
   return Array.from({ length: 7 }, (_, i) => {
-    const date = new Date(monday);
-    date.setDate(monday.getDate() + i);
+    const date = new Date(sunday);
+    date.setDate(sunday.getDate() + i);
     return date;
   });
 }
@@ -91,6 +90,29 @@ export function getDatesInMonth(selectedMonth) {
   const monthIndex = Number(monthText) - 1;
   const daysInMonth = new Date(year, monthIndex + 1, 0).getDate();
   return Array.from({ length: daysInMonth }, (_, i) => new Date(year, monthIndex, i + 1));
+}
+
+export function getCalendarWeeks(selectedMonth) {
+  const [yearText, monthText] = selectedMonth.split('-');
+  const year = Number(yearText);
+  const monthIndex = Number(monthText) - 1;
+
+  const firstOfMonth = new Date(year, monthIndex, 1);
+  const lastOfMonth = new Date(year, monthIndex + 1, 0);
+
+  const cursor = new Date(firstOfMonth);
+  cursor.setDate(firstOfMonth.getDate() - firstOfMonth.getDay()); // rewind to Sunday
+
+  const weeks = [];
+  while (cursor <= lastOfMonth) {
+    const week = [];
+    for (let i = 0; i < 7; i++) {
+      week.push(new Date(cursor));
+      cursor.setDate(cursor.getDate() + 1);
+    }
+    weeks.push(week);
+  }
+  return weeks;
 }
 
 export function isHabitActiveInMonth(habit, selectedMonth) {
