@@ -192,15 +192,14 @@ body {
 .card h2 { margin: 0 0 12px; font-size: 16px; color: #BE7961; }
 
 .habit-form {
-  display: flex;
+  display: grid;
+  grid-template-columns: 210px 150px minmax(190px, 1fr) 210px auto;
   gap: 12px;
   align-items: flex-end;
-  flex-wrap: nowrap;
   width: 100%;
 }
 
 .habit-form > div {
-  flex: 1 1 auto;
   min-width: 0;
 }
 
@@ -210,15 +209,28 @@ body {
   box-sizing: border-box;
 }
 
-.frequency-field,
-.target-date-field {
-  flex: 1 1 auto;
+.frequency-field {
+  width: 100%;
+}
+
+.notes-field {
+  width: 100%;
   min-width: 0;
+}
+
+.target-date-field {
+  width: 100%;
 }
 
 #frequency,
 #target-date-input {
   width: 100%;
+  box-sizing: border-box;
+}
+
+#habit-notes-input {
+  width: 100%;
+  min-width: 190px;
   box-sizing: border-box;
 }
 
@@ -272,15 +284,22 @@ button#add-btn {
 
 @media (max-width: 768px) {
   .habit-form {
-    flex-wrap: wrap;
+    grid-template-columns: 1fr;
     gap: 12px;
   }
 
   .habit-form > div,
+  .notes-field,
   .frequency-field,
   .target-date-field {
     flex: 1 1 100%;
+    width: 100%;
     min-width: 0;
+  }
+
+  #habit-notes-input {
+    min-width: 0;
+    width: 100%;
   }
 
   button#add-btn {
@@ -351,6 +370,14 @@ button#add-btn {
 .habit-meta {
     font-size: 12px;
     color: #BE7961;
+}
+
+.habit-note {
+  display: block;
+  font-size: 12px;
+  color: #8a5b47;
+  line-height: 1.4;
+  margin-top: 2px;
 }
 
 .habit-item.done .habit-name {
@@ -425,6 +452,10 @@ button#add-btn {
   min-width: 0;
 }
 
+.habit-col .habit-name {
+  display: block;
+}
+
 .week-check-cell {
   width: 28px;
   height: 28px;
@@ -491,6 +522,18 @@ button#add-btn {
 .habit-edit-input {
   width: 100%;
   box-sizing: border-box;
+}
+
+.habit-edit-textarea {
+  resize: vertical;
+  min-height: 64px;
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: 1px solid #F3C248;
+  color: #BE7961;
+  font-size: 14px;
+  outline: none;
+  font-family: inherit;
 }
 
 .month-filter {

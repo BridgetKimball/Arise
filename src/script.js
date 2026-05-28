@@ -6,6 +6,7 @@ const habitForm = document.getElementById('habit-form');
 const habitInput = document.getElementById('habit-input');
 const frequencyInput = document.getElementById('frequency');
 const targetDateInput = document.getElementById('target-date-input');
+const notesInput = document.getElementById('habit-notes-input');
 const habitList = document.getElementById('habit-list');
 const emptyState = document.getElementById('empty-state');
 const progressContainer = document.getElementById('progress-container');
@@ -54,6 +55,7 @@ function normalizeHabits(habitsToNormalize) {
         frequency: canonicalizeFrequency(habit.frequency),
         startDate: habit.startDate || today,
         targetDate: habit.targetDate || '',
+        notes: typeof habit.notes === 'string' ? habit.notes : '',
         checkins: habit.checkins && typeof habit.checkins === 'object' ? habit.checkins : {}
     }));
 }
@@ -92,6 +94,17 @@ function escapeAttribute(value) {
         .replace(/"/g, '&quot;')
         .replace(/</g, '&lt;')
         .replace(/>/g, '&gt;');
+}
+
+function escapeHtml(value) {
+    return String(value)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
+}
+
+function getHabitNoteMarkup(habit) {
+    return habit.notes ? `<span class="habit-note">${escapeHtml(habit.notes)}</span>` : '';
 }
 
 function getDateKey(dateObject) {
@@ -184,6 +197,10 @@ function render() {
                                     </select>
                                 </div>
                             </div>
+                            <div>
+                                <label class="habit-edit-label" for="edit-notes-${index}">Notes</label>
+                                <textarea id="edit-notes-${index}" class="habit-edit-input habit-edit-textarea" rows="3" placeholder="Add a note for this habit">${escapeHtml(habit.notes || '')}</textarea>
+                            </div>
                         </div>
                         <button class="edit-btn" onclick="saveEditedHabit(${index})">Save</button>
                         <button class="edit-btn edit-cancel-btn" onclick="cancelEditHabit()">Cancel</button>
@@ -193,6 +210,7 @@ function render() {
                         <div class="habit-details">
                             <span class="habit-name">${habit.name}</span>
                             <span class="habit-meta">${getHabitMetaText(habit, activeDays)}</span>
+                            ${getHabitNoteMarkup(habit)}
                         </div>
                         ${habit.completed ? '<span class="badge">Done!</span>' : ''}
                         <button class="edit-btn" onclick="beginEditHabit(${index})">Edit</button>
@@ -207,6 +225,7 @@ function render() {
                     <div class="habit-details">
                         <span class="habit-name">${habit.name}</span>
                         <span class="habit-meta">${getHabitMetaText(habit, activeDays)}</span>
+                        ${getHabitNoteMarkup(habit)}
                     </div>
                     ${habit.completed ? '<span class="badge">Done!</span>' : ''}
                     <button class="delete-btn" onclick="deleteHabit(${index})">✕</button>
@@ -286,8 +305,9 @@ function saveEditedHabit(index) {
     const startInput = document.getElementById(`edit-start-${index}`);
     const targetInput = document.getElementById(`edit-target-${index}`);
     const frequencySelect = document.getElementById(`edit-frequency-${index}`);
+    const notesEditInput = document.getElementById(`edit-notes-${index}`);
 
-    if (!nameInput || !startInput || !targetInput || !frequencySelect) {
+    if (!nameInput || !startInput || !targetInput || !frequencySelect || !notesEditInput) {
         return;
     }
 
@@ -315,7 +335,8 @@ function saveEditedHabit(index) {
         name: trimmedName,
         frequency: canonicalizeFrequency(frequencySelect.value),
         startDate: normalizedStartDate,
-        targetDate: normalizedTargetDate
+        targetDate: normalizedTargetDate,
+        notes: notesEditInput.value.trim()
     };
 
     editingHabitIndex = null;
@@ -592,7 +613,10 @@ function renderMonthlyHabits() {
 
             return `
                 <tr>
-                    <td class="habit-col">${habit.name}</td>
+                    <td class="habit-col">
+                        <div class="habit-name">${habit.name}</div>
+                        ${getHabitNoteMarkup(habit)}
+                    </td>
                     ${cells}
                 </tr>
             `;
@@ -685,7 +709,10 @@ function renderWeeklyTable() {
 
         return `
             <tr>
-                <td class="habit-col">${habit.name}</td>
+                <td class="habit-col">
+                    <div class="habit-name">${habit.name}</div>
+                    ${getHabitNoteMarkup(habit)}
+                </td>
                 ${cells}
             </tr>
         `;
@@ -714,6 +741,7 @@ if (habitForm && habitInput) {
         const frequency = frequencyInput ? canonicalizeFrequency(frequencyInput.value) : 'daily';
         const startDate = getTodayDateString();
         const targetDate = targetDateInput && targetDateInput.value ? targetDateInput.value : '';
+        const notes = notesInput ? notesInput.value.trim() : '';
 
         if (targetDate && !isValidDateString(targetDate)) {
             window.alert('Please use a valid target date in YYYY-MM-DD format.');
@@ -727,6 +755,7 @@ if (habitForm && habitInput) {
                 completed: false,
                 startDate,
                 targetDate,
+                notes,
                 checkins: {}
             });
             habitInput.value = '';
@@ -735,6 +764,9 @@ if (habitForm && habitInput) {
             }
             if (targetDateInput) {
                 targetDateInput.value = '';
+            }
+            if (notesInput) {
+                notesInput.value = '';
             }
             saveAndRender();
         }
