@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#E87C3A">
+    <title>Arise - Login</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="pictures/arise_logo.png">
+    <link rel="stylesheet" href="src/style.css">
+</head>
+<body data-page="login">
+    <div class="app-container">
+        <header class="header">
+            <button id="nav-toggle" class="top-logo-button" type="button" aria-label="Open navigation menu" aria-controls="side-nav" aria-expanded="false">
+                <img class="top-logo-icon" src="pictures/arise_logo.png" alt="logo navigation icon">
+            </button>
+            <button id="header-user-indicator" class="header-user-indicator" type="button" hidden></button>
+            <div id="nav-overlay" class="side-nav-overlay" aria-hidden="true"></div>
+            <nav id="side-nav" class="side-nav-panel" aria-label="Site navigation">
+                <h2 class="side-nav-title">Navigate</h2>
+                <ul class="side-nav-list">
+                    <li><a class="side-nav-link" href="/index.html">Home</a></li>
+                    <li><a class="side-nav-link" href="/src/monthly_habits.html">Monthly Habits</a></li>
+                    <li><a class="side-nav-link" href="/src/edit_habits.html">Edit Habits</a></li>
+                </ul>
+                <div class="side-nav-footer">
+                    <a id="nav-auth-link" class="side-nav-link" href="/login.html">Login</a>
+                </div>
+            </nav>
+
+            <div class="header-center">
+                <h1>Arise</h1>
+                <p class="subtitle">Habit Tracker</p>
+            </div>
+            <div class="header-right">
+                <p id="current-date" class="date-text"></p>
+                <p class="status-text">Welcome</p>
+            </div>
+        </header>
+
+        <main class="main-content auth-main-content">
+            <div class="card auth-card">
+                <h2 id="auth-card-title">Login</h2>
+                <p class="auth-intro">Sign in with your username or email to load your habits from your saved account. If you are new here, create an account with an email, username, and password so your habits will be stored on the server instead of in the browser.</p>
+                <p id="auth-message" class="auth-message"></p>
+
+                <form id="auth-login-form" class="auth-form">
+                    <div class="auth-field">
+                        <label for="auth-login-identifier">Username or email</label>
+                        <input type="text" id="auth-login-identifier" autocomplete="username" placeholder="Username or email" required>
+                    </div>
+                    <div class="auth-field">
+                        <label for="auth-login-password">Password</label>
+                        <input type="password" id="auth-login-password" autocomplete="current-password" required>
+                    </div>
+                    <div class="auth-actions">
+                        <button type="submit" class="auth-primary-btn">Log in</button>
+                        <button type="button" id="auth-show-register-btn" class="auth-secondary-btn">Create account</button>
+                    </div>
+                </form>
+
+                <form id="auth-register-form" class="auth-form" hidden>
+                    <div class="auth-field">
+                        <label for="auth-register-email">Email</label>
+                        <input type="email" id="auth-register-email" autocomplete="email" placeholder="you@example.com" required>
+                    </div>
+                    <div class="auth-field">
+                        <label for="auth-register-username">Username</label>
+                        <input type="text" id="auth-register-username" autocomplete="username" placeholder="Choose a username" required>
+                    </div>
+                    <div class="auth-field">
+                        <label for="auth-register-password">Password</label>
+                        <input type="password" id="auth-register-password" autocomplete="new-password" required>
+                    </div>
+                    <div class="auth-actions">
+                        <button type="submit" class="auth-primary-btn">Create Account</button>
+                        <button type="button" id="auth-show-login-btn" class="auth-secondary-btn">Back to login</button>
+                    </div>
+                </form>
+            </div>
+        </main>
+    </div>
+    <script src="src/script.js"></script>
+    <script>
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('./sw.js').catch(() => {});
+      }
+    </script>
+</body>
+</html>

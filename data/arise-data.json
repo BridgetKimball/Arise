@@ -1,0 +1,123 @@
+{
+  "users": [
+    {
+      "id": "b2e0cab8-a599-4bab-8370-8c61d1b5d7b6",
+      "username": "testuser",
+      "salt": "202bdcc97331c4a39121c43553e28ebd",
+      "passwordHash": "866bd754a399b06aacbd9f0173fdf4be6e5ffa6c0af61f9514df2b763df9012cdf8c0911e4b3093a53233520c227ee1ac4307c2350349c6dd0a300d707e4e1dd",
+      "createdAt": "2026-05-30T20:25:43.506Z"
+    },
+    {
+      "id": "cbcb2ddf-d89a-4ffe-b62c-4d5578f7054c",
+      "username": "testuser1780173494",
+      "salt": "62a63dbe4443119c2bf38710dfd03ce1",
+      "passwordHash": "92d5572d6328e843a01c1c577976d6e0852088021307d381530b6bfedebcd67c2564b939698694fade85b1fa0a7aef04254320debe28caa34885870a6967518d",
+      "createdAt": "2026-05-30T20:38:14.283Z"
+    },
+    {
+      "id": "2e749454-cc2a-4efd-b3b7-198a6cf8b8e0",
+      "username": "testuser1780173503",
+      "salt": "cdcbef7a78f0a6e76ddbda3b141847b1",
+      "passwordHash": "cc9a8a0c1ce2194a0aca404e5f34d6cc2fce5b160e871e4e10367ac6761c2beef6db092b970946dc1ce3907a27339ec93f4963c2c4ae2e4ce32fc65a55e47094",
+      "createdAt": "2026-05-30T20:38:23.331Z"
+    },
+    {
+      "id": "ea7bcfba-94cf-49a8-8a1e-24a6854fc2d8",
+      "username": "testuser1780173517",
+      "salt": "f01850fa92ec99dd61fb8f45638d76c8",
+      "passwordHash": "cc5015efbee0c3bd664cf6317c83fd952ac4197bf4f7408e9ce51b72653a783a32e5cfc8bc62810f9b4739786835e9ef8b90cb1314c3c20160053d9d40936207",
+      "createdAt": "2026-05-30T20:38:37.957Z"
+    },
+    {
+      "id": "ba9d6600-8fcb-49f9-8641-34b37cb9a5a1",
+      "email": "test1780173533@example.com",
+      "username": "testuser1780173533",
+      "salt": "2d30328e51707c231b5367f396d38d08",
+      "passwordHash": "f0780647f400b49ddf41a2b07336dc705e1c6cdf79043408814e43b0dce04e8266c5b9fb5f90c337f47b6a04a9b5ca9722a1a7656acbb772a2703aedb1b00d9b",
+      "createdAt": "2026-05-30T20:38:54.011Z"
+    },
+    {
+      "id": "e6465305-31fe-459b-a0e1-7ba4ee1ee317",
+      "email": "test1780174668@example.com",
+      "username": "testuser1780174668",
+      "salt": "26effc32f2109073fa255d6db6e6350d",
+      "passwordHash": "20428c38cc8d35590a3874f33b81fcdc3a83efb1238da2389c35c2041abd516850ed1d03741389e6d25ee872183e2ade813a3592023fbb551e5972dc2748ab75",
+      "createdAt": "2026-05-30T20:57:48.625Z"
+    },
+    {
+      "id": "bbf0d9cc-263e-4f5f-b0b1-650d6e802d41",
+      "email": "bridget.kimball@icloud.com",
+      "username": "bridget",
+      "salt": "ee266ebd1ca72d019b8b26e582c2f96b",
+      "passwordHash": "633c46d4f51556525a2a8ea1d0e8171157366abf5cf85a8daf6fad8655a3f6a1322beaf09fdebf18bbc8f96ff59e7b1b61ca8e9356b4a10cc9dbf377b921142d",
+      "createdAt": "2026-05-30T20:59:46.493Z"
+    },
+    {
+      "id": "21180841-9bea-4c90-afda-518fe2aa7cb8",
+      "email": "test1780175002@example.com",
+      "username": "testuser1780175002",
+      "salt": "3d90c5829ef3dde55431522f5a797b14",
+      "passwordHash": "e68996f7e74fd63991d1f11bbf4c504cc923c92b1fb15a305d36204474b7708cbc0706c834eb0bdd5d5520d29bab9d879e80c8c8de52dd7843676e23f2b79d64",
+      "createdAt": "2026-05-30T21:03:22.582Z"
+    },
+    {
+      "id": "6d5422be-0880-4d57-909a-1f6848997204",
+      "email": "test1780175581@example.com",
+      "username": "testuser1780175581_new",
+      "salt": "3c00e60edcdfa9d5a6e28c53ff659ab5",
+      "passwordHash": "8c766734ed9cc4d351c3a6e1b7d0f8ddf2b849eb52c394e69cb621c56db973f742b4ceacd0d693860ea7ce11cdbc5aee9f68e1423cf3ca99c6203adc4c23ecd3",
+      "createdAt": "2026-05-30T21:13:01.821Z"
+    }
+  ],
+  "sessions": {
+    "0c0dcb9621c392a34d4a948ec3b7e11062a0e1baac715ba14ed9b57e147c342b": "b2e0cab8-a599-4bab-8370-8c61d1b5d7b6",
+    "2ef5149bf59f68067cec6c6b87de1b2fbeae222a2ae70f5b8b9c3682acb52cce": "ea7bcfba-94cf-49a8-8a1e-24a6854fc2d8",
+    "0bdaa7fff31bf07a54588833c688099abf196ea41279aa235d93b0ed6c2c4fba": "ba9d6600-8fcb-49f9-8641-34b37cb9a5a1",
+    "790407132c015426066d7ee4712b7465a529a2884b98feb13e89febc76432559": "ba9d6600-8fcb-49f9-8641-34b37cb9a5a1",
+    "3bdc5dfbe1c857c01ce29b02f59c31d763539ccb851db22add776d0dfc78b0da": "e6465305-31fe-459b-a0e1-7ba4ee1ee317",
+    "31132f3a6be612dc1fe59ce9a9b5ef57811916f6790e94f029326db826e7926c": "21180841-9bea-4c90-afda-518fe2aa7cb8",
+    "b49b31154320f33032f1dedd21414eef9b569fb4a40c89e9b2481e353f3d3b2c": "bbf0d9cc-263e-4f5f-b0b1-650d6e802d41",
+    "bd96adc17fbf45e390f6c992105542b5ba7821e872a02d405b8ebd94d17e7246": "6d5422be-0880-4d57-909a-1f6848997204",
+    "af617e083aeb554d61dd12885bb14c508f198af1728b402ae87aa1568f7dbe84": "6d5422be-0880-4d57-909a-1f6848997204"
+  },
+  "habitsByUser": {
+    "b2e0cab8-a599-4bab-8370-8c61d1b5d7b6": [
+      {
+        "name": "Read",
+        "frequency": "daily",
+        "completed": false,
+        "startDate": "2026-05-27",
+        "targetDate": "",
+        "notes": "note",
+        "checkins": {}
+      }
+    ],
+    "cbcb2ddf-d89a-4ffe-b62c-4d5578f7054c": [],
+    "2e749454-cc2a-4efd-b3b7-198a6cf8b8e0": [],
+    "ea7bcfba-94cf-49a8-8a1e-24a6854fc2d8": [],
+    "ba9d6600-8fcb-49f9-8641-34b37cb9a5a1": [],
+    "e6465305-31fe-459b-a0e1-7ba4ee1ee317": [],
+    "bbf0d9cc-263e-4f5f-b0b1-650d6e802d41": [
+      {
+        "name": "Network",
+        "frequency": "daily",
+        "completed": false,
+        "startDate": "2026-05-30",
+        "targetDate": "",
+        "notes": "At least 15 people a week",
+        "checkins": {}
+      },
+      {
+        "name": "Apply for jobs",
+        "frequency": "daily",
+        "completed": false,
+        "startDate": "2026-05-30",
+        "targetDate": "",
+        "notes": "At least 3 a day",
+        "checkins": {}
+      }
+    ],
+    "21180841-9bea-4c90-afda-518fe2aa7cb8": [],
+    "6d5422be-0880-4d57-909a-1f6848997204": []
+  }
+}

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#E87C3A">
+    <title>Arise - Profile Settings</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="pictures/arise_logo.png">
+    <link rel="stylesheet" href="src/style.css">
+</head>
+<body data-page="profile">
+    <div class="app-container">
+        <header class="header">
+            <button id="nav-toggle" class="top-logo-button" type="button" aria-label="Open navigation menu" aria-controls="side-nav" aria-expanded="false">
+                <img class="top-logo-icon" src="pictures/arise_logo.png" alt="logo navigation icon">
+            </button>
+            <button id="header-user-indicator" class="header-user-indicator" type="button" hidden></button>
+            <div id="nav-overlay" class="side-nav-overlay" aria-hidden="true"></div>
+            <nav id="side-nav" class="side-nav-panel" aria-label="Site navigation">
+                <h2 class="side-nav-title">Navigate</h2>
+                <ul class="side-nav-list">
+                    <li><a class="side-nav-link" href="/index.html">Home</a></li>
+                    <li><a class="side-nav-link" href="/src/monthly_habits.html">Monthly Habits</a></li>
+                    <li><a class="side-nav-link" href="/src/edit_habits.html">Edit Habits</a></li>
+                </ul>
+                <div class="side-nav-footer">
+                    <a id="nav-auth-link" class="side-nav-link" href="/login.html">Login</a>
+                </div>
+            </nav>
+
+            <div class="header-center">
+                <h1>Arise</h1>
+                <p class="subtitle">Habit Tracker</p>
+            </div>
+            <div class="header-right">
+                <p id="current-date" class="date-text"></p>
+                <p class="status-text">Profile Settings</p>
+            </div>
+        </header>
+
+        <main class="main-content auth-main-content">
+            <div class="card auth-card">
+                <h2>Profile Settings</h2>
+                <p class="auth-intro">Update your username, email, or password here. You can also delete your account from this page.</p>
+                <p id="profile-message" class="auth-message"></p>
+
+                <form id="profile-form" class="auth-form">
+                    <div class="auth-field">
+                        <label for="profile-username">Username</label>
+                        <input type="text" id="profile-username" name="username" autocomplete="username" required>
+                    </div>
+                    <div class="auth-field">
+                        <label for="profile-email">Email</label>
+                        <input type="email" id="profile-email" name="email" autocomplete="email" required>
+                    </div>
+                    <div class="auth-field">
+                        <label for="profile-password">New password</label>
+                        <input type="password" id="profile-password" name="password" autocomplete="current-password" placeholder="Leave blank to keep current password">
+                    </div>
+                    <div class="auth-actions">
+                        <button type="submit" class="auth-primary-btn">Save changes</button>
+                        <button type="button" id="profile-cancel-btn" class="auth-secondary-btn">Back</button>
+                    </div>
+                </form>
+
+                <div class="profile-danger-zone">
+                    <h3>Danger zone</h3>
+                    <p>Deleting your account permanently removes your profile and habits.</p>
+                    <button type="button" id="profile-delete-btn" class="delete-account-btn">Delete account</button>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script src="src/script.js"></script>
+    <script>
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('./sw.js').catch(() => {});
+      }
+    </script>
+</body>
+</html>

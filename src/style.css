@@ -60,6 +60,29 @@ body {
   outline-offset: 2px;
 }
 
+.header-user-indicator {
+  position: fixed;
+  top: 24px;
+  left: 74px;
+  max-width: calc(100vw - 110px);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 13px;
+  font-weight: 700;
+  color: #E87C3A;
+  z-index: 145;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  padding: 0;
+}
+
+.header-user-indicator:focus-visible {
+  outline: 2px solid #E87C3A;
+  outline-offset: 3px;
+}
+
 .top-logo-icon {
   width: 30px;
   height: 30px;
@@ -94,8 +117,8 @@ body {
   transform: translateX(-100%);
   transition: transform 0.28s cubic-bezier(0.2, 0.8, 0.2, 1);
   z-index: 130;
-  display: grid;
-  align-content: start;
+  display: flex;
+  flex-direction: column;
   gap: 14px;
 }
 
@@ -113,6 +136,13 @@ body {
   margin: 12px 0 0;
   display: grid;
   gap: 10px;
+  flex: 0 0 auto;
+}
+
+.side-nav-footer {
+  padding-top: 10px;
+  margin-top: auto;
+  padding-bottom: 30px;
 }
 
 .side-nav-link {
@@ -378,6 +408,193 @@ button#add-btn {
   color: #8a5b47;
   line-height: 1.4;
   margin-top: 2px;
+}
+
+.auth-main-content {
+  max-width: 720px;
+}
+
+.auth-card {
+  max-width: 520px;
+  margin: 40px auto;
+}
+
+.auth-intro {
+  margin: 0 0 18px;
+  color: #8a5b47;
+  line-height: 1.5;
+}
+
+.auth-form {
+  display: grid;
+  gap: 14px;
+}
+
+.auth-form[hidden] {
+  display: none !important;
+}
+
+.auth-field {
+  display: grid;
+  gap: 6px;
+}
+
+.auth-field label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #be7961;
+}
+
+.auth-field input {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.auth-message {
+  min-height: 20px;
+  margin: 0;
+  font-size: 13px;
+  color: #be7961;
+}
+
+.auth-message.error {
+  color: #b64a18;
+}
+
+.auth-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.auth-primary-btn,
+.auth-secondary-btn {
+  border: none;
+  border-radius: 8px;
+  padding: 10px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.auth-primary-btn {
+  background-color: #E87C3A;
+  color: #fff;
+}
+
+.auth-secondary-btn {
+  background-color: #FAF4BD;
+  color: #8a5b47;
+}
+
+.profile-danger-zone {
+  margin-top: 28px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(190, 121, 97, 0.25);
+}
+
+.profile-danger-zone h3 {
+  margin: 0 0 8px;
+  color: #b64a18;
+  font-size: 16px;
+}
+
+.profile-danger-zone p {
+  margin: 0 0 14px;
+  color: #8a5b47;
+  line-height: 1.5;
+}
+
+.delete-account-btn {
+  border: none;
+  border-radius: 8px;
+  padding: 10px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #c85a2d;
+  color: #fff;
+  box-shadow: 0 2px 0 rgba(181, 74, 24, 0.18);
+}
+
+.delete-account-btn:hover {
+  background: #b64a18;
+}
+
+.delete-account-btn:focus-visible {
+  outline: 2px solid #b64a18;
+  outline-offset: 2px;
+}
+
+.confirm-dialog {
+  position: fixed;
+  inset: 0;
+  z-index: 250;
+  display: grid;
+  place-items: center;
+}
+
+.confirm-dialog[hidden] {
+  display: none !important;
+}
+
+.confirm-dialog__overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(232, 124, 58, 0.28);
+  backdrop-filter: blur(3px);
+}
+
+.confirm-dialog__panel {
+  position: relative;
+  z-index: 1;
+  width: min(92vw, 420px);
+  background: #fffdf6;
+  border: 1px solid rgba(190, 121, 97, 0.25);
+  border-radius: 16px;
+  padding: 22px;
+  box-shadow: 0 22px 50px rgba(0, 0, 0, 0.22);
+}
+
+.confirm-dialog__title {
+  margin: 0 0 10px;
+  color: #b64a18;
+  font-size: 18px;
+}
+
+.confirm-dialog__message {
+  margin: 0 0 18px;
+  color: #8a5b47;
+  line-height: 1.5;
+}
+
+.confirm-dialog__actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.confirm-dialog__button {
+  border: none;
+  border-radius: 8px;
+  padding: 10px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.confirm-dialog__button--primary {
+  background: #b64a18;
+  color: #fff;
+}
+
+.confirm-dialog__button--secondary {
+  background: #FAF4BD;
+  color: #8a5b47;
 }
 
 .habit-item.done .habit-name {

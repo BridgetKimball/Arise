@@ -19,6 +19,21 @@ The project follows a **growth roadmap**:
 
 ## 🌐 Deployment
 
+### Run the server-backed app locally
+
+Arise now includes login and server-side habit storage.
+
+1. Open a terminal in the project folder
+2. Start the server:
+
+```
+npm start
+```
+
+3. Open [http://localhost:3000](http://localhost:3000)
+
+Habits are saved on the server in `data/arise-data.json` after you log in or create an account.
+
 ---
 
 ### 1. Open in a Web Browser

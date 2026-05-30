@@ -1,7 +1,9 @@
-const CACHE_NAME = 'arise-v1';
+const CACHE_NAME = 'arise-v2';
 const ASSETS = [
   './',
   './index.html',
+  './login.html',
+  './profile.html',
   './src/monthly_habits.html',
   './src/edit_habits.html',
   './src/style.css',

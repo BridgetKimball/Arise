@@ -1,5 +1,18 @@
 // State Management
-let habits = JSON.parse(localStorage.getItem('habits')) || [];
+const isLoginPage = document.body.dataset.page === 'login';
+let currentUser = null;
+let habits = [];
+const apiBaseUrl = (() => {
+    if (!window.location.protocol.startsWith('http')) {
+        return 'http://localhost:3001';
+    }
+
+    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+        return 'http://localhost:3001';
+    }
+
+    return window.location.origin;
+})();
 
 // DOM Elements
 const habitForm = document.getElementById('habit-form');
@@ -22,15 +35,15 @@ const monthlyCheckTable = document.getElementById('monthly-check-table');
 const weeklyCheckTable = document.getElementById('weekly-check-table');
 const weekRangeLabel = document.getElementById('week-range-label');
 const isEditHabitsPage = document.body.dataset.page === 'edit-habits';
+const isProfilePage = document.body.dataset.page === 'profile';
 let editingHabitIndex = null;
+let confirmDialogResolver = null;
 
 // Initialize Date
 const options = { weekday: 'long', month: 'short', day: 'numeric' };
 if (currentDateEl) {
     currentDateEl.textContent = new Date().toLocaleDateString('en-US', options);
 }
-
-habits = normalizeHabits(habits);
 
 // Functions
 function getTodayDateString() {
@@ -46,6 +59,158 @@ function getCurrentMonthString() {
     const year = today.getFullYear();
     const month = String(today.getMonth() + 1).padStart(2, '0');
     return `${year}-${month}`;
+}
+
+async function apiRequest(pathname, options = {}) {
+    const response = await fetch(`${apiBaseUrl}${pathname}`, {
+        credentials: 'include',
+        headers: {
+            'Content-Type': 'application/json',
+            ...(options.headers || {})
+        },
+        ...options
+    });
+
+    const contentType = response.headers.get('content-type') || '';
+    let payload = null;
+
+    if (contentType.includes('application/json')) {
+        payload = await response.json();
+    } else {
+        payload = await response.text();
+    }
+
+    if (!response.ok) {
+        const message = payload && typeof payload === 'object' && payload.error
+            ? payload.error
+            : (typeof payload === 'string' && payload.trim() ? payload : 'Request failed.');
+        const error = new Error(message);
+        error.status = response.status;
+        throw error;
+    }
+
+    return payload;
+}
+
+async function fetchCurrentUser() {
+    try {
+        const payload = await apiRequest('/api/me');
+        return payload.user || null;
+    } catch (error) {
+        if (error.status === 401) {
+            return null;
+        }
+        console.warn('Falling back to local habits because the server is unavailable.', error);
+        return null;
+    }
+}
+
+async function fetchHabitsFromServer() {
+    const payload = await apiRequest('/api/habits');
+    habits = normalizeHabits(Array.isArray(payload.habits) ? payload.habits : []);
+}
+
+function loadHabitsFromLocalStorage() {
+    const localHabitsRaw = localStorage.getItem('habits');
+
+    if (!localHabitsRaw) {
+        habits = [];
+        return;
+    }
+
+    try {
+        const parsedHabits = JSON.parse(localHabitsRaw);
+        habits = normalizeHabits(Array.isArray(parsedHabits) ? parsedHabits : []);
+    } catch {
+        habits = [];
+    }
+}
+
+async function persistHabits() {
+    if (!currentUser) {
+        localStorage.setItem('habits', JSON.stringify(habits));
+        return;
+    }
+
+    await apiRequest('/api/habits', {
+        method: 'PUT',
+        body: JSON.stringify({ habits })
+    });
+}
+
+async function migrateLocalHabitsIfNeeded() {
+    if (!currentUser || habits.length > 0) {
+        return;
+    }
+
+    const localHabitsRaw = localStorage.getItem('habits');
+    if (!localHabitsRaw) {
+        return;
+    }
+
+    let localHabits = [];
+    try {
+        localHabits = JSON.parse(localHabitsRaw);
+    } catch {
+        localHabits = [];
+    }
+
+    if (!Array.isArray(localHabits) || localHabits.length === 0) {
+        localStorage.removeItem('habits');
+        return;
+    }
+
+    habits = normalizeHabits(localHabits);
+    await persistHabits();
+    localStorage.removeItem('habits');
+}
+
+function updateAuthLink() {
+    const authLink = document.getElementById('nav-auth-link');
+    const userIndicator = document.getElementById('header-user-indicator');
+    if (!authLink) {
+        return;
+    }
+
+    if (currentUser) {
+        authLink.textContent = 'Logout';
+        authLink.href = '#';
+        authLink.onclick = async (event) => {
+            event.preventDefault();
+            await logout();
+        };
+        if (userIndicator) {
+            userIndicator.textContent = currentUser.username;
+            userIndicator.title = 'Open profile settings';
+            userIndicator.hidden = false;
+            userIndicator.onclick = () => {
+                window.location.href = '/profile.html';
+            };
+        }
+        return;
+    }
+
+    authLink.textContent = 'Login';
+    authLink.href = '/login.html';
+    authLink.onclick = null;
+    if (userIndicator) {
+        userIndicator.textContent = 'Guest';
+        userIndicator.title = '';
+        userIndicator.hidden = false;
+        userIndicator.onclick = null;
+    }
+}
+
+async function logout() {
+    try {
+        await apiRequest('/api/logout', { method: 'POST' });
+    } catch {
+        // Even if logout fails, move the user back to the login page.
+    }
+
+    currentUser = null;
+    habits = [];
+    window.location.href = '/login.html';
 }
 
 function normalizeHabits(habitsToNormalize) {
@@ -143,8 +308,8 @@ function getActiveDays(startDateString) {
     return Math.max(0, days);
 }
 
-function saveAndRender() {
-    localStorage.setItem('habits', JSON.stringify(habits));
+async function saveAndRender() {
+    await persistHabits();
     render();
     renderMonthlyHabits();
     renderWeeklyTable();
@@ -252,7 +417,7 @@ function updateProgress() {
     completionStatus.textContent = `${completed}/${total} done`;
 }
 
-function toggleHabit(index) {
+async function toggleHabit(index) {
     if (!habits[index]) {
         return;
     }
@@ -260,11 +425,22 @@ function toggleHabit(index) {
     habits[index].completed = !habits[index].completed;
     const todayKey = getTodayDateString();
     habits[index].checkins[todayKey] = habits[index].completed;
-    saveAndRender();
+    await saveAndRender();
 }
 
-function deleteHabit(index) {
+async function deleteHabit(index) {
     if (!habits[index]) {
+        return;
+    }
+
+    const habitName = habits[index].name || 'this habit';
+    const confirmed = await showConfirmDialog({
+        title: 'Delete habit?',
+        message: `Delete "${habitName}" permanently? This cannot be undone.`,
+        confirmLabel: 'Delete habit'
+    });
+
+    if (!confirmed) {
         return;
     }
 
@@ -275,7 +451,7 @@ function deleteHabit(index) {
     }
 
     habits.splice(index, 1);
-    saveAndRender();
+    await saveAndRender();
 }
 
 function beginEditHabit(index) {
@@ -296,7 +472,7 @@ function cancelEditHabit() {
     render();
 }
 
-function saveEditedHabit(index) {
+async function saveEditedHabit(index) {
     if (!isEditHabitsPage || !habits[index]) {
         return;
     }
@@ -340,14 +516,14 @@ function saveEditedHabit(index) {
     };
 
     editingHabitIndex = null;
-    saveAndRender();
+    await saveAndRender();
 }
 
 window.beginEditHabit = beginEditHabit;
 window.saveEditedHabit = saveEditedHabit;
 window.cancelEditHabit = cancelEditHabit;
 
-function toggleWeekCheck(index, dateKey) {
+async function toggleWeekCheck(index, dateKey) {
     if (!habits[index]) {
         return;
     }
@@ -359,12 +535,12 @@ function toggleWeekCheck(index, dateKey) {
         habits[index].completed = !currentValue;
     }
 
-    saveAndRender();
+    await saveAndRender();
 }
 
 window.toggleWeekCheck = toggleWeekCheck;
 
-function toggleMonthCheck(index, dateKey) {
+async function toggleMonthCheck(index, dateKey) {
     if (!habits[index]) {
         return;
     }
@@ -376,10 +552,92 @@ function toggleMonthCheck(index, dateKey) {
         habits[index].completed = !currentValue;
     }
 
-    saveAndRender();
+    await saveAndRender();
 }
 
 window.toggleMonthCheck = toggleMonthCheck;
+
+function ensureConfirmDialog() {
+    if (document.getElementById('confirm-dialog')) {
+        return;
+    }
+
+    const dialog = document.createElement('div');
+    dialog.id = 'confirm-dialog';
+    dialog.className = 'confirm-dialog';
+    dialog.hidden = true;
+    dialog.innerHTML = `
+        <div class="confirm-dialog__overlay" data-confirm-cancel></div>
+        <div class="confirm-dialog__panel" role="dialog" aria-modal="true" aria-labelledby="confirm-dialog-title" aria-describedby="confirm-dialog-message">
+            <h3 id="confirm-dialog-title" class="confirm-dialog__title">Confirm action</h3>
+            <p id="confirm-dialog-message" class="confirm-dialog__message"></p>
+            <div class="confirm-dialog__actions">
+                <button type="button" class="confirm-dialog__button confirm-dialog__button--primary" data-confirm-yes>Confirm</button>
+                <button type="button" class="confirm-dialog__button confirm-dialog__button--secondary" data-confirm-cancel>Cancel</button>
+            </div>
+        </div>
+    `;
+
+    dialog.addEventListener('click', (event) => {
+        const target = event.target;
+        if (!(target instanceof HTMLElement)) {
+            return;
+        }
+
+        if (target.hasAttribute('data-confirm-cancel')) {
+            closeConfirmDialog(false);
+        }
+
+        if (target.hasAttribute('data-confirm-yes')) {
+            closeConfirmDialog(true);
+        }
+    });
+
+    document.body.appendChild(dialog);
+}
+
+function closeConfirmDialog(result) {
+    const dialog = document.getElementById('confirm-dialog');
+    if (!dialog) {
+        return;
+    }
+
+    dialog.hidden = true;
+    document.body.classList.remove('confirm-dialog-open');
+
+    if (confirmDialogResolver) {
+        confirmDialogResolver(result);
+        confirmDialogResolver = null;
+    }
+}
+
+function showConfirmDialog({ title, message, confirmLabel }) {
+    ensureConfirmDialog();
+
+    const dialog = document.getElementById('confirm-dialog');
+    const dialogTitle = document.getElementById('confirm-dialog-title');
+    const dialogMessage = document.getElementById('confirm-dialog-message');
+    const confirmButton = dialog ? dialog.querySelector('[data-confirm-yes]') : null;
+
+    if (!dialog || !dialogTitle || !dialogMessage || !confirmButton) {
+        return Promise.resolve(false);
+    }
+
+    if (confirmDialogResolver) {
+        confirmDialogResolver(false);
+    }
+
+    dialogTitle.textContent = title;
+    dialogMessage.textContent = message;
+    confirmButton.textContent = confirmLabel;
+    dialog.hidden = false;
+    document.body.classList.add('confirm-dialog-open');
+
+    return new Promise((resolve) => {
+        confirmDialogResolver = resolve;
+        setTimeout(() => confirmButton.focus(), 0);
+    });
+}
 
 function setNavOpen(isOpen) {
     if (!navToggleButton || !sideNav || !navOverlay) {
@@ -735,7 +993,7 @@ function renderWeeklyTable() {
 
 // Event Listeners
 if (habitForm && habitInput) {
-    habitForm.addEventListener('submit', (e) => {
+    habitForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         const name = habitInput.value.trim();
         const frequency = frequencyInput ? canonicalizeFrequency(frequencyInput.value) : 'daily';
@@ -768,15 +1026,334 @@ if (habitForm && habitInput) {
             if (notesInput) {
                 notesInput.value = '';
             }
-            saveAndRender();
+            await saveAndRender();
         }
     });
 }
 
-// Initial Load
-setupNavigation();
-if (habitList) {
-    render();
+function setAuthMessage(message, isError = false) {
+    const authMessage = document.getElementById('auth-message');
+    if (!authMessage) {
+        return;
+    }
+
+    authMessage.textContent = message;
+    authMessage.classList.toggle('error', isError);
 }
-setupMonthlyHabitsView();
-renderWeeklyTable();
+
+async function submitAuthForm(action) {
+    const loginIdentifierInput = document.getElementById('auth-login-identifier');
+    const loginPasswordInput = document.getElementById('auth-login-password');
+    const registerEmailInput = document.getElementById('auth-register-email');
+    const registerUsernameInput = document.getElementById('auth-register-username');
+    const registerPasswordInput = document.getElementById('auth-register-password');
+
+    if (action === 'register') {
+        if (!registerEmailInput || !registerUsernameInput || !registerPasswordInput) {
+            return;
+        }
+
+        const email = registerEmailInput.value.trim();
+        const username = registerUsernameInput.value.trim();
+        const password = registerPasswordInput.value;
+
+        if (!email || !username || !password) {
+            setAuthMessage('Enter an email, username, and password.', true);
+            return;
+        }
+
+        setAuthMessage('');
+
+        try {
+            await apiRequest('/api/register', {
+                method: 'POST',
+                body: JSON.stringify({ email, username, password })
+            });
+
+            clearAuthInputs();
+            setAuthMessage('Account created. Please log in.', false);
+            window.location.href = '/login.html';
+        } catch (error) {
+            setAuthMessage(error.message || 'Unable to create account.', true);
+        }
+
+        return;
+    }
+
+    if (!loginIdentifierInput || !loginPasswordInput) {
+        return;
+    }
+
+    const identifier = loginIdentifierInput.value.trim();
+    const password = loginPasswordInput.value;
+
+    if (!identifier || !password) {
+        setAuthMessage('Enter a username or email and password.', true);
+        return;
+    }
+
+    setAuthMessage('');
+
+    try {
+        const payload = await apiRequest('/api/login', {
+            method: 'POST',
+            body: JSON.stringify({ identifier, password })
+        });
+
+        currentUser = payload.user || { username: identifier };
+        clearAuthInputs();
+        await fetchHabitsFromServer();
+        await migrateLocalHabitsIfNeeded();
+        updateAuthLink();
+        window.location.href = '/index.html';
+    } catch (error) {
+        setAuthMessage(error.message || 'Unable to sign in.', true);
+    }
+}
+
+function setupLoginPage() {
+    const loginForm = document.getElementById('auth-login-form');
+    const registerForm = document.getElementById('auth-register-form');
+    const showRegisterButton = document.getElementById('auth-show-register-btn');
+    const showLoginButton = document.getElementById('auth-show-login-btn');
+    const cardTitle = document.getElementById('auth-card-title');
+
+    if (currentUser) {
+        window.location.href = '/index.html';
+        return;
+    }
+
+    if (!loginForm) {
+        return;
+    }
+
+    const setAuthMode = (mode) => {
+        const isRegisterMode = mode === 'register';
+        clearAuthInputs();
+        if (cardTitle) {
+            cardTitle.textContent = isRegisterMode ? 'Create Account' : 'Login';
+        }
+        if (loginForm) {
+            loginForm.hidden = isRegisterMode;
+        }
+        if (registerForm) {
+            registerForm.hidden = !isRegisterMode;
+        }
+    };
+
+    setAuthMode('login');
+
+    loginForm.addEventListener('submit', (event) => {
+        event.preventDefault();
+        void submitAuthForm('login');
+    });
+
+    if (registerForm) {
+        registerForm.addEventListener('submit', (event) => {
+            event.preventDefault();
+            void submitAuthForm('register');
+        });
+    }
+
+    if (showRegisterButton) {
+        showRegisterButton.addEventListener('click', () => {
+            setAuthMode('register');
+            setAuthMessage('');
+        });
+    }
+
+    if (showLoginButton) {
+        showLoginButton.addEventListener('click', () => {
+            setAuthMode('login');
+            setAuthMessage('');
+        });
+    }
+}
+
+function clearAuthInputs() {
+    const inputs = [
+        'auth-login-identifier',
+        'auth-login-password',
+        'auth-register-email',
+        'auth-register-username',
+        'auth-register-password'
+    ];
+
+    for (const inputId of inputs) {
+        const input = document.getElementById(inputId);
+        if (input) {
+            input.value = '';
+        }
+    }
+}
+
+function setProfileMessage(message, isError = false) {
+    const profileMessage = document.getElementById('profile-message');
+    if (!profileMessage) {
+        return;
+    }
+
+    profileMessage.textContent = message;
+    profileMessage.classList.toggle('error', isError);
+}
+
+function populateProfileForm(user) {
+    const usernameInput = document.getElementById('profile-username');
+    const emailInput = document.getElementById('profile-email');
+    const passwordInput = document.getElementById('profile-password');
+    const username = user?.username || '';
+    const email = user?.email || '';
+
+    if (usernameInput) {
+        usernameInput.value = username;
+        usernameInput.defaultValue = username;
+    }
+    if (emailInput) {
+        emailInput.value = email;
+        emailInput.defaultValue = email;
+    }
+    if (passwordInput) {
+        passwordInput.value = '';
+        passwordInput.defaultValue = '';
+    }
+}
+
+async function submitProfileForm() {
+    const usernameInput = document.getElementById('profile-username');
+    const emailInput = document.getElementById('profile-email');
+    const passwordInput = document.getElementById('profile-password');
+
+    if (!usernameInput || !emailInput || !passwordInput) {
+        return;
+    }
+
+    const username = usernameInput.value.trim();
+    const email = emailInput.value.trim();
+    const password = passwordInput.value;
+
+    if (!username || !email) {
+        setProfileMessage('Username and email are required.', true);
+        return;
+    }
+
+    setProfileMessage('');
+
+    try {
+        const payload = await apiRequest('/api/me', {
+            method: 'PUT',
+            body: JSON.stringify({ username, email, password })
+        });
+
+        currentUser = payload.user || currentUser;
+        populateProfileForm(currentUser);
+        updateAuthLink();
+        setProfileMessage('Profile updated.');
+    } catch (error) {
+        setProfileMessage(error.message || 'Unable to save profile changes.', true);
+    }
+}
+
+async function deleteProfileAccount() {
+    const confirmed = await showConfirmDialog({
+        title: 'Delete account?',
+        message: 'Delete your account and all habits permanently? This cannot be undone.',
+        confirmLabel: 'Delete account'
+    });
+
+    if (!confirmed) {
+        return;
+    }
+
+    try {
+        await apiRequest('/api/me', { method: 'DELETE' });
+        currentUser = null;
+        habits = [];
+        updateAuthLink();
+        window.location.href = '/login.html';
+    } catch (error) {
+        setProfileMessage(error.message || 'Unable to delete account.', true);
+    }
+}
+
+function setupProfilePage() {
+    if (!currentUser) {
+        window.location.href = '/login.html';
+        return;
+    }
+
+    const profileForm = document.getElementById('profile-form');
+    const deleteButton = document.getElementById('profile-delete-btn');
+    const cancelButton = document.getElementById('profile-cancel-btn');
+
+    populateProfileForm(currentUser);
+    updateAuthLink();
+
+    if (profileForm) {
+        profileForm.addEventListener('submit', (event) => {
+            event.preventDefault();
+            void submitProfileForm();
+        });
+    }
+
+    if (deleteButton) {
+        deleteButton.addEventListener('click', () => {
+            void deleteProfileAccount();
+        });
+    }
+
+    if (cancelButton) {
+        cancelButton.addEventListener('click', () => {
+            window.location.href = '/index.html';
+        });
+    }
+}
+
+async function initializeApp() {
+    setupNavigation();
+    ensureConfirmDialog();
+    currentUser = await fetchCurrentUser();
+    updateAuthLink();
+
+    if (isLoginPage) {
+        setupLoginPage();
+        return;
+    }
+
+    if (isProfilePage) {
+        setupProfilePage();
+        return;
+    }
+
+    if (currentUser) {
+        try {
+            await fetchHabitsFromServer();
+            await migrateLocalHabitsIfNeeded();
+        } catch (error) {
+            console.warn('Falling back to local habits because server habits could not be loaded.', error);
+            currentUser = null;
+            loadHabitsFromLocalStorage();
+        }
+    } else {
+        loadHabitsFromLocalStorage();
+    }
+
+    if (habitList) {
+        render();
+    }
+    setupMonthlyHabitsView();
+    renderWeeklyTable();
+}
+
+initializeApp().catch((error) => {
+    console.error(error);
+    if (isLoginPage) {
+        setAuthMessage('Unable to connect to the server.', true);
+    } else {
+        loadHabitsFromLocalStorage();
+        if (habitList) {
+            render();
+        }
+        setupMonthlyHabitsView();
+        renderWeeklyTable();
+    }
+});
