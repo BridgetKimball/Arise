@@ -2,16 +2,30 @@
 const isLoginPage = document.body.dataset.page === 'login';
 let currentUser = null;
 let habits = [];
-const apiBaseUrl = (() => {
+const apiBaseUrlCandidates = (() => {
+    const candidates = [];
+    const configuredBaseUrl = window.ARISE_API_BASE_URL
+        || document.querySelector('meta[name="arise-api-base-url"]')?.content
+        || '';
+
+    if (configuredBaseUrl) {
+        candidates.push(configuredBaseUrl.trim());
+    }
+
     if (!window.location.protocol.startsWith('http')) {
-        return 'http://localhost:3001';
+        candidates.push('http://localhost:3001');
+        return candidates;
     }
 
     if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-        return 'http://localhost:3001';
+        candidates.push('http://localhost:3001');
+        candidates.push(window.location.origin);
+    } else {
+        candidates.push(window.location.origin);
+        candidates.push('http://localhost:3001');
     }
 
-    return window.location.origin;
+    return [...new Set(candidates.filter(Boolean))];
 })();
 
 // DOM Elements
@@ -62,34 +76,61 @@ function getCurrentMonthString() {
 }
 
 async function apiRequest(pathname, options = {}) {
-    const response = await fetch(`${apiBaseUrl}${pathname}`, {
-        credentials: 'include',
-        headers: {
-            'Content-Type': 'application/json',
-            ...(options.headers || {})
-        },
-        ...options
-    });
+    let lastError = null;
+    const lastCandidate = apiBaseUrlCandidates[apiBaseUrlCandidates.length - 1];
 
-    const contentType = response.headers.get('content-type') || '';
-    let payload = null;
+    for (const baseUrl of apiBaseUrlCandidates) {
+        try {
+            const response = await fetch(`${baseUrl}${pathname}`, {
+                credentials: 'include',
+                headers: {
+                    'Content-Type': 'application/json',
+                    ...(options.headers || {})
+                },
+                ...options
+            });
 
-    if (contentType.includes('application/json')) {
-        payload = await response.json();
-    } else {
-        payload = await response.text();
+            const contentType = response.headers.get('content-type') || '';
+            let payload = null;
+
+            if (contentType.includes('application/json')) {
+                payload = await response.json();
+            } else {
+                payload = await response.text();
+            }
+
+            if (!response.ok) {
+                const message = payload && typeof payload === 'object' && payload.error
+                    ? payload.error
+                    : (typeof payload === 'string' && payload.trim() ? payload : 'Request failed.');
+                const error = new Error(message);
+                error.status = response.status;
+                error.payload = payload;
+
+                const shouldRetry = response.status === 404 || response.status === 405 || response.status === 502;
+                if (shouldRetry && baseUrl !== lastCandidate) {
+                    lastError = error;
+                    continue;
+                }
+
+                throw error;
+            }
+
+            return payload;
+        } catch (error) {
+            const isLastCandidate = baseUrl === apiBaseUrlCandidates[apiBaseUrlCandidates.length - 1];
+            const shouldRetryNetworkError = error instanceof TypeError || error.status === 404 || error.status === 405 || error.status === 502;
+
+            if (!isLastCandidate && shouldRetryNetworkError) {
+                lastError = error;
+                continue;
+            }
+
+            throw error;
+        }
     }
 
-    if (!response.ok) {
-        const message = payload && typeof payload === 'object' && payload.error
-            ? payload.error
-            : (typeof payload === 'string' && payload.trim() ? payload : 'Request failed.');
-        const error = new Error(message);
-        error.status = response.status;
-        throw error;
-    }
-
-    return payload;
+    throw lastError || new Error('Request failed.');
 }
 
 async function fetchCurrentUser() {
@@ -108,6 +149,7 @@ async function fetchCurrentUser() {
 async function fetchHabitsFromServer() {
     const payload = await apiRequest('/api/habits');
     habits = normalizeHabits(Array.isArray(payload.habits) ? payload.habits : []);
+    habits = mergeFrequencyBackupsFromLocalStorage(habits);
 }
 
 function loadHabitsFromLocalStorage() {
@@ -129,12 +171,63 @@ function loadHabitsFromLocalStorage() {
 async function persistHabits() {
     if (!currentUser) {
         localStorage.setItem('habits', JSON.stringify(habits));
-        return;
+        return habits;
     }
 
-    await apiRequest('/api/habits', {
+    const payload = await apiRequest('/api/habits', {
         method: 'PUT',
         body: JSON.stringify({ habits })
+    });
+
+    habits = normalizeHabits(Array.isArray(payload.habits) ? payload.habits : habits);
+    localStorage.setItem('habits', JSON.stringify(habits));
+    return habits;
+}
+
+function getHabitFrequencyBackupKey(habit) {
+    return [
+        String(habit?.name || '').trim().toLowerCase(),
+        String(habit?.startDate || ''),
+        String(habit?.targetDate || ''),
+        String(habit?.notes || '').trim().toLowerCase()
+    ].join('|');
+}
+
+function mergeFrequencyBackupsFromLocalStorage(serverHabits) {
+    const localHabitsRaw = localStorage.getItem('habits');
+    if (!localHabitsRaw) {
+        return serverHabits;
+    }
+
+    let localHabits = [];
+    try {
+        localHabits = normalizeHabits(JSON.parse(localHabitsRaw));
+    } catch {
+        return serverHabits;
+    }
+
+    if (!Array.isArray(localHabits) || localHabits.length === 0) {
+        return serverHabits;
+    }
+
+    const localFrequencyByHabit = new Map(
+        localHabits.map((habit) => [getHabitFrequencyBackupKey(habit), habit.frequency])
+    );
+
+    return serverHabits.map((habit) => {
+        const localFrequency = localFrequencyByHabit.get(getHabitFrequencyBackupKey(habit));
+        if (!localFrequency || localFrequency === habit.frequency) {
+            return habit;
+        }
+
+        if (localFrequency === 'weekdays' || localFrequency === 'weekends') {
+            return {
+                ...habit,
+                frequency: localFrequency
+            };
+        }
+
+        return habit;
     });
 }
 
@@ -162,7 +255,6 @@ async function migrateLocalHabitsIfNeeded() {
 
     habits = normalizeHabits(localHabits);
     await persistHabits();
-    localStorage.removeItem('habits');
 }
 
 function updateAuthLink() {
@@ -227,6 +319,14 @@ function normalizeHabits(habitsToNormalize) {
 
 function canonicalizeFrequency(value) {
     const normalized = String(value || '').trim().toLowerCase();
+
+    // if (normalized === 'weekdays' || normalized === 'weekday' || normalized === 'week days') {
+    //     return 'weekdays';
+    // }
+
+    // if (normalized === 'weekends' || normalized === 'weekend' || normalized === 'week ends') {
+    //     return 'weekends';
+    // }
 
     if (normalized === 'weekly' || normalized === 'once a week') {
         return 'weekly';
@@ -310,6 +410,17 @@ function getActiveDays(startDateString) {
 
 async function saveAndRender() {
     await persistHabits();
+
+    if (currentUser) {
+        try {
+            await fetchHabitsFromServer();
+        } catch (error) {
+            console.warn('Unable to refresh habits after saving.', error);
+        }
+    } else {
+        loadHabitsFromLocalStorage();
+    }
+
     render();
     renderMonthlyHabits();
     renderWeeklyTable();
@@ -358,6 +469,8 @@ function render() {
                                     <select id="edit-frequency-${index}" class="habit-edit-input">
                                         <option value="daily" ${habit.frequency === 'daily' ? 'selected' : ''}>Daily</option>
                                         <option value="weekly" ${habit.frequency === 'weekly' ? 'selected' : ''}>Weekly</option>
+                                        <option value="weekdays" ${habit.frequency === 'weekdays' ? 'selected' : ''}>Weekdays</option>
+                                        <option value="weekends" ${habit.frequency === 'weekends' ? 'selected' : ''}>Weekends</option>
                                         <option value="monthly" ${habit.frequency === 'monthly' ? 'selected' : ''}>Monthly</option>
                                     </select>
                                 </div>
@@ -747,6 +860,14 @@ function isDateScheduledByFrequency(habit, date) {
     if (frequency === 'weekly') {
         return dateWeekday === habitStart.getDay();
     }
+
+    // if (frequency === 'weekdays') {
+    //     return dateWeekday >= 1 && dateWeekday <= 5;
+    // }
+
+    // if (frequency === 'weekends') {
+    //     return dateWeekday === 0 || dateWeekday === 6;
+    // }
 
     if (frequency === 'monthly') {
         return date.getDate() === habitStart.getDate();
