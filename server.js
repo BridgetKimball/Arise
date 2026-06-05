@@ -269,7 +269,7 @@ async function handleLogin(req, res) {
     return sendJson(res, 401, {
       error: isEmailLogin
         ? 'No account exists with that login information.'
-        : 'Incorrect username.'
+        : 'Incorrect username/email.'
     });
   }
 

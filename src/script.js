@@ -1162,6 +1162,24 @@ function setAuthMessage(message, isError = false) {
     authMessage.classList.toggle('error', isError);
 }
 
+function getLoginFailureMessage(error) {
+    const knownMessages = new Set([
+        'Incorrect username/email.',
+        'Incorrect password.',
+        'No account exists with that login information.'
+    ]);
+
+    if (error && typeof error.message === 'string' && knownMessages.has(error.message)) {
+        return error.message;
+    }
+
+    if (error && error.status === 401 && typeof error.message === 'string' && error.message.trim()) {
+        return error.message;
+    }
+
+    return 'Incorrect username/email, incorrect password, or no account exists with that login information.';
+}
+
 async function submitAuthForm(action) {
     const loginIdentifierInput = document.getElementById('auth-login-identifier');
     const loginPasswordInput = document.getElementById('auth-login-password');
@@ -1228,7 +1246,7 @@ async function submitAuthForm(action) {
         updateAuthLink();
         window.location.href = '/index.html';
     } catch (error) {
-        setAuthMessage(error.message || 'Unable to sign in.', true);
+        setAuthMessage(getLoginFailureMessage(error), true);
     }
 }
 
