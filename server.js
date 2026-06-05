@@ -226,11 +226,11 @@ async function handleRegister(req, res) {
   }
 
   if (db.users.some((user) => user.username === username)) {
-    return sendJson(res, 409, { error: 'That username is already registered.' });
+    return sendJson(res, 409, { error: 'An account with that username/email already exists.' });
   }
 
   if (db.users.some((user) => normalizeEmail(user.email) === email)) {
-    return sendJson(res, 409, { error: 'That email is already registered.' });
+    return sendJson(res, 409, { error: 'An account with that username/email already exists.' });
   }
 
   const passwordRecord = hashPassword(password);
@@ -319,11 +319,11 @@ async function handleUpdateMe(req, res) {
   }
 
   if (db.users.some((entry) => entry.id !== user.id && entry.username === nextUsername)) {
-    return sendJson(res, 409, { error: 'That username is already registered.' });
+    return sendJson(res, 409, { error: 'An account with that username/email already exists.' });
   }
 
   if (db.users.some((entry) => entry.id !== user.id && normalizeEmail(entry.email) === nextEmail)) {
-    return sendJson(res, 409, { error: 'That email is already registered.' });
+    return sendJson(res, 409, { error: 'An account with that username/email already exists.' });
   }
 
   user.username = nextUsername;
