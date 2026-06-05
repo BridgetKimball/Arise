@@ -1,6 +1,5 @@
 Next Steps:
-- Implement cross-platform aspect (allow mobile access)
-- Add more features: to-do list?
-- Login
-
-Look at ideas.txt for feature ideas
+- Edit login to require unique usernames and emails
+- Edit profile settings page
+    - Delete all habits altogether
+    - Properly change username/email/password

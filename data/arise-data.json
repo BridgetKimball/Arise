@@ -78,7 +78,9 @@
     "31132f3a6be612dc1fe59ce9a9b5ef57811916f6790e94f029326db826e7926c": "21180841-9bea-4c90-afda-518fe2aa7cb8",
     "b49b31154320f33032f1dedd21414eef9b569fb4a40c89e9b2481e353f3d3b2c": "bbf0d9cc-263e-4f5f-b0b1-650d6e802d41",
     "bd96adc17fbf45e390f6c992105542b5ba7821e872a02d405b8ebd94d17e7246": "6d5422be-0880-4d57-909a-1f6848997204",
-    "af617e083aeb554d61dd12885bb14c508f198af1728b402ae87aa1568f7dbe84": "6d5422be-0880-4d57-909a-1f6848997204"
+    "af617e083aeb554d61dd12885bb14c508f198af1728b402ae87aa1568f7dbe84": "6d5422be-0880-4d57-909a-1f6848997204",
+    "8760cf8f6424f2928585279b39955fdf5ed29f8e73a52061b1f19135235203de": "bbf0d9cc-263e-4f5f-b0b1-650d6e802d41",
+    "e2f41ecf24877d66587a626fb2df7bc97a48b03408f9944b885350c86d155437": "bbf0d9cc-263e-4f5f-b0b1-650d6e802d41"
   },
   "habitsByUser": {
     "b2e0cab8-a599-4bab-8370-8c61d1b5d7b6": [
@@ -101,20 +103,45 @@
       {
         "name": "Network",
         "frequency": "daily",
-        "completed": false,
-        "startDate": "2026-05-30",
+        "completed": true,
+        "startDate": "2026-05-26",
         "targetDate": "",
         "notes": "At least 15 people a week",
-        "checkins": {}
+        "checkins": {
+          "2026-05-26": true,
+          "2026-05-27": true,
+          "2026-05-28": true,
+          "2026-05-29": true,
+          "2026-05-30": true,
+          "2026-05-31": true
+        }
       },
       {
         "name": "Apply for jobs",
         "frequency": "daily",
-        "completed": false,
-        "startDate": "2026-05-30",
+        "completed": true,
+        "startDate": "2026-05-26",
         "targetDate": "",
-        "notes": "At least 3 a day",
-        "checkins": {}
+        "notes": "3+ a day",
+        "checkins": {
+          "2026-05-26": true,
+          "2026-05-27": true,
+          "2026-05-28": true,
+          "2026-05-29": true,
+          "2026-05-31": true
+        }
+      },
+      {
+        "name": "Exercise",
+        "frequency": "daily",
+        "completed": false,
+        "startDate": "2026-05-26",
+        "targetDate": "",
+        "notes": "30+ minutes",
+        "checkins": {
+          "2026-05-26": true,
+          "2026-05-27": true
+        }
       }
     ],
     "21180841-9bea-4c90-afda-518fe2aa7cb8": [],

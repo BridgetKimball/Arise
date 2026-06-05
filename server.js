@@ -199,7 +199,7 @@ function normalizeHabitsForStorage(habits) {
 
   return habits.map((habit) => ({
     name: String(habit?.name || '').trim(),
-    frequency: ['daily', 'weekly', 'monthly'].includes(String(habit?.frequency || '').toLowerCase())
+    frequency: ['daily', 'weekly', 'monthly', 'weekdays', 'weekends'].includes(String(habit?.frequency || '').toLowerCase())
       ? String(habit.frequency).toLowerCase()
       : 'daily',
     completed: Boolean(habit?.completed),
@@ -260,10 +260,21 @@ async function handleLogin(req, res) {
 
   const identifier = normalizeUsername(body.identifier || body.username || body.email);
   const password = String(body.password || '');
-  const user = db.users.find((entry) => entry.username === identifier || normalizeEmail(entry.email) === identifier);
+  const isEmailLogin = identifier.includes('@');
+  const user = isEmailLogin
+    ? db.users.find((entry) => normalizeEmail(entry.email) === identifier)
+    : db.users.find((entry) => entry.username === identifier);
 
-  if (!user || !verifyPassword(password, user)) {
-    return sendJson(res, 401, { error: 'Invalid username, email, or password.' });
+  if (!user) {
+    return sendJson(res, 401, {
+      error: isEmailLogin
+        ? 'No account exists with that login information.'
+        : 'Incorrect username.'
+    });
+  }
+
+  if (!verifyPassword(password, user)) {
+    return sendJson(res, 401, { error: 'Incorrect password.' });
   }
 
   createSession(res, db, user.id);
@@ -389,7 +400,7 @@ async function serveStaticFile(req, res, pathname) {
     res.end(fileBuffer);
   } catch {
     if (pathname === '/login') {
-      return serveStaticFile(req, res, '/login.html');
+      return serveStaticFile(req, res, '/Arise/login.html');
     }
     return sendText(res, 404, 'Not found');
   }

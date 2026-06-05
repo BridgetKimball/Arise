@@ -283,7 +283,7 @@ function updateAuthLink() {
     }
 
     authLink.textContent = 'Login';
-    authLink.href = '/login.html';
+    authLink.href = '/Arise/login.html';
     authLink.onclick = null;
     if (userIndicator) {
         userIndicator.textContent = 'Guest';
@@ -302,7 +302,7 @@ async function logout() {
 
     currentUser = null;
     habits = [];
-    window.location.href = '/login.html';
+    window.location.href = '/Arise/login.html';
 }
 
 function normalizeHabits(habitsToNormalize) {
@@ -1193,7 +1193,7 @@ async function submitAuthForm(action) {
 
             clearAuthInputs();
             setAuthMessage('Account created. Please log in.', false);
-            window.location.href = '/login.html';
+            window.location.href = '/Arise/login.html';
         } catch (error) {
             setAuthMessage(error.message || 'Unable to create account.', true);
         }
@@ -1390,7 +1390,7 @@ async function deleteProfileAccount() {
         currentUser = null;
         habits = [];
         updateAuthLink();
-        window.location.href = '/login.html';
+        window.location.href = '/Arise/login.html';
     } catch (error) {
         setProfileMessage(error.message || 'Unable to delete account.', true);
     }
@@ -1398,7 +1398,7 @@ async function deleteProfileAccount() {
 
 function setupProfilePage() {
     if (!currentUser) {
-        window.location.href = '/login.html';
+        window.location.href = '/Arise/login.html';
         return;
     }
 
