@@ -7,7 +7,7 @@
     <title>Arise - Profile Settings</title>
     <link rel="manifest" href="manifest.json">
     <link rel="apple-touch-icon" href="pictures/arise_logo.png">
-    <link rel="stylesheet" href="src/style.css">
+    <link rel="stylesheet" href="src/style.css?v=5">
 </head>
 <body data-page="profile">
     <div class="app-container">
@@ -20,12 +20,12 @@
             <nav id="side-nav" class="side-nav-panel" aria-label="Site navigation">
                 <h2 class="side-nav-title">Navigate</h2>
                 <ul class="side-nav-list">
-                    <li><a class="side-nav-link" href="/index.html">Home</a></li>
-                    <li><a class="side-nav-link" href="/src/monthly_habits.html">Monthly Habits</a></li>
-                    <li><a class="side-nav-link" href="/src/edit_habits.html">Edit Habits</a></li>
+                    <li><a class="side-nav-link" href="/Arise/index.html">Home</a></li>
+                    <li><a class="side-nav-link" href="/Arise/src/monthly_habits.html">Monthly Habits</a></li>
+                    <li><a class="side-nav-link" href="/Arise/src/edit_habits.html">Edit Habits</a></li>
                 </ul>
                 <div class="side-nav-footer">
-                    <a id="nav-auth-link" class="side-nav-link" href="/login.html">Login</a>
+                    <a id="nav-auth-link" class="side-nav-link" href="/Arise/login.html">Login</a>
                 </div>
             </nav>
 
@@ -72,10 +72,10 @@
             </div>
         </main>
     </div>
-    <script src="src/script.js"></script>
+        <script src="src/script.js?v=5"></script>
     <script>
       if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('./sw.js').catch(() => {});
+                navigator.serviceWorker.register('./sw.js?v=5').catch(() => {});
       }
     </script>
 </body>
